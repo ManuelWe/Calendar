@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style2.css">
+    <title>Bootstrap Website Tutorial</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style2.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="MyNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><img src="img/w3newbie.png"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar right">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Testimonials</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div id="dasHauptDivElementWoEureEinträgeAngezeigtWerden">
+    Dieser Text wird vollständig vom Javascript überschrieben
+</div>
+
+<script>
+    //dieses Skript ließt alle Einträge und gibt sie in einer Tabelle aus
+    var xhttp = new XMLHttpRequest();
+    var url = "http://dhbw.ramonbisswanger.de/calendar/stefang/events";
+    xhttp.open("GET", url, false);
+    xhttp.send();
+
+    eventArray = JSON.parse(xhttp.responseText);
+
+    var txt = "<table class='calenderList'>" +
+        "<tr>" +
+        "<th>Eventname" +
+        "</th>" +
+        "<th>Starttime" +
+        "</th>" +
+        "<th>Startdate" +
+        "</th>" +
+        "<th>Endtime" +
+        "</th>" +
+        "<th>Enddate" +
+        "</th>" +
+        "</tr>"
+
+    for (event in eventArray) {
+        txt += "<tr>" +
+            "<td>" +
+            eventArray[event].title +
+            "</td>"+
+            "<td>" +
+            eventArray[event].start.substr(11, 5) +
+            "</td>\n" +
+            "<td>"+
+            eventArray[event].end.substr(0, 10) +
+            "</td>" +
+            "<td>" +
+            eventArray[event].end.substr(11, 5) +
+            "</td>" +
+            "<td>"+
+            eventArray[event].end.substr(0, 10) +
+            "</td>" +
+            "</tr>"
+
+    }
+    txt += "</table>"
+    document.getElementById("dasHauptDivElementWoEureEinträgeAngezeigtWerden").innerHTML = txt;
+</script>
+
+
+<script>
+    //Dieses Skript ERSTELLT einen eintrag
+    var xhr = new XMLHttpRequest();
+    var url = "http://dhbw.ramonbisswanger.de/calendar/userxysabc/events";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var json = JSON.parse(xhr.responseText);
+        }
+    };
+    var data = JSON.stringify(
+        {
+            "title": "euerTitel",
+            "location": "euerOrt",
+            "organizer": "dhbw@bisswanger.de",
+            "start": "2017-01-01T18:00",
+            "end": "2017-01-01T19:00",
+            "status": "Busy",
+            "allday": 0,
+            "webpage": "http://www.bisswanger.de/"
+        }
+    );
+
+    //EINKOMMENTIEREN WENN IHR WIEDER TERMINE ERSTELLEN WOLLT
+    // xhr.send(data);
+</script>
+
+
+</body>
+</html>
