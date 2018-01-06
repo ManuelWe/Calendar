@@ -10,26 +10,43 @@ function termineAuslesen() {
     xhttp.send();
 
     eventArray = JSON.parse(xhttp.responseText);
-    txt = "<table border='1'>"
+
+    var txt = "<table class='calenderList'>" +
+        "<tr>" +
+        "<th>Eventname" +
+        "</th>" +
+        "<th>Starttime" +
+        "</th>" +
+        "<th>Startdate" +
+        "</th>" +
+        "<th>Endtime" +
+        "</th>" +
+        "<th>Enddate" +
+        "</th>" +
+        "</tr>"
 
     for (event in eventArray) {
-        txt += " <tr><td>" +
-            "<div class=\"dayofmonth\">" + eventArray[event].start + "</div>" +
-            "<div class=\"shortdate text-muted\">" + eventArray[event].end + "</div>" +
-            "</td><td class=\"agenda-time\">" +
-            eventArray[event].start.substr(11, 5) +
-            "</td>" +
-            "<td class=\"agenda-events\">" +
-            "<div class=\"agenda-event\">" +
-            "<i class=\"glyphicon glyphicon-repeat text-muted\" title=\"Repeating event\"></i> \n" +
+        txt += "<tr>" +
+            "<td>" +
             eventArray[event].title +
-            "</div>\n" +
+            "</td>"+
+            "<td>" +
+            eventArray[event].start.substr(11, 5) +
             "</td>\n" +
+            "<td>"+
+            eventArray[event].end.substr(0, 10) +
+            "</td>" +
+            "<td>" +
+            eventArray[event].end.substr(11, 5) +
+            "</td>" +
+            "<td>"+
+            eventArray[event].end.substr(0, 10) +
+            "</td>" +
             "</tr>"
 
     }
     txt += "</table>"
-    document.getElementById("dasHauptDivElementWoEureEinträgeAngezeigtWerden").innerHTML = "txt";
+    document.getElementById("dasHauptDivElementWoEureEinträgeAngezeigtWerden").innerHTML = txt;
 }
 
 function eintragErstellen() {
@@ -67,24 +84,40 @@ function listeAktualisieren(anzahl) {
         anzahl = eventArray.length;
     }
 
-    txt = "<table border='1'>"
+    var txt = "<table class='calenderList'>" +
+        "<tr>" +
+        "<th>Eventname" +
+        "</th>" +
+        "<th>Starttime" +
+        "</th>" +
+        "<th>Startdate" +
+        "</th>" +
+        "<th>Endtime" +
+        "</th>" +
+        "<th>Enddate" +
+        "</th>" +
+        "</tr>"
 
     for (i = 0; i < anzahl; i++) {
-        txt += " <tr><td>" +
-            "<div class=\"dayofmonth\">" + eventArray[i].start + "</div>" +
-            "<div class=\"shortdate text-muted\">" + eventArray[i].end + "</div>" +
-            "</td><td class=\"agenda-time\">" +
-            eventArray[i].start.substr(11, 5) +
-            "</td>" +
-            "<td class=\"agenda-events\">" +
-            "<div class=\"agenda-event\">" +
-            "<i class=\"glyphicon glyphicon-repeat text-muted\" title=\"Repeating event\"></i> \n" +
-            eventArray[i].title +
-            "</div>\n" +
+        txt += "<tr>" +
+            "<td>" +
+            eventArray[anzahl].title +
+            "</td>"+
+            "<td>" +
+            eventArray[anzahl].start.substr(11, 5) +
             "</td>\n" +
+            "<td>"+
+            eventArray[anzahl].end.substr(0, 10) +
+            "</td>" +
+            "<td>" +
+            eventArray[anzahl].end.substr(11, 5) +
+            "</td>" +
+            "<td>"+
+            eventArray[anzahl].end.substr(0, 10) +
+            "</td>" +
             "</tr>"
-
     }
+
     txt += "</table>"
     document.getElementById("dasHauptDivElementWoEureEinträgeAngezeigtWerden").innerHTML = txt;
 }
