@@ -143,7 +143,9 @@ var showPopup = function (event) {
         .style.display = 'block';
 };
 
+function deleteEntry(){
 
+}
 function test() {
 
 }
