@@ -78,3 +78,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 .dropdown:hover .dropbtn {
     background-color: #3e8e41;
 }
+
+.col-sm-offset-3 > div {
+    display: none;
+    position: absolute;
+}

@@ -1,11 +1,20 @@
 var txt;
 var eventArray;
 
+
+function init() {
+    termineAuslesen();
+    document
+        .getElementById('popup-clickie')
+        .addEventListener('click', showPopup);
+}
+
+
 function termineAuslesen() {
 //dieses Skript ließt alle Einträge und gibt sie in einer Tabelle aus
 
     var xhttp = new XMLHttpRequest();
-    var url = "http://dhbw.ramonbisswanger.de/calendar/test/events";
+    var url = "https://dhbw.ramonbisswanger.de/calendar/test/events";
     xhttp.open("GET", url, false);
     xhttp.send();
 
@@ -29,17 +38,17 @@ function termineAuslesen() {
         txt += "<tr>" +
             "<td>" +
             eventArray[event].title +
-            "</td>"+
+            "</td>" +
             "<td>" +
             eventArray[event].start.substr(11, 5) +
             "</td>\n" +
-            "<td>"+
+            "<td>" +
             eventArray[event].end.substr(0, 10) +
             "</td>" +
             "<td>" +
             eventArray[event].end.substr(11, 5) +
             "</td>" +
-            "<td>"+
+            "<td>" +
             eventArray[event].end.substr(0, 10) +
             "</td>" +
             "</tr>"
@@ -52,37 +61,43 @@ function termineAuslesen() {
 function eintragErstellen() {
 //Dieses Skript ERSTELLT einen eintrag
     var xhr = new XMLHttpRequest();
-    var url = "http://dhbw.ramonbisswanger.de/calendar/jihivsdi/events";
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
+    var url = "https://dhbw.ramonbisswanger.de/calendar/manuelw/events";
     xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
+        console.log(xhr.readyState);
+        console.log(xhr.status);
+        if (this.readyState === 4 && this.status === 200) {
             var json = JSON.parse(xhr.responseText);
         }
     };
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+
     var data = JSON.stringify(
         {
-            "title": " Christmas Feast",
-            "location": "Stuttgart",
-            "organizer": "dhbw@bisswanger.de",
-            "start": "2014-12-24T18:00",
-            "end": "2014-12-24T23:30",
+            "id": 1,
+            "title": "Ramon 3",
+            "location": null,
+            "organizer": "test@dsad.com",
+            "start": "2017-12-11T11:11",
+            "end": "2017-12-11T11:15",
             "status": "Busy",
-            "allday": 0,
-            "webpage": "http://www.bisswanger.de/"
+            "allday": false,
+            "webpage": "google.com",
+            "categories": []
         }
-
     );
 
 //EINKOMMENTIEREN WENN IHR WIEDER TERMINE ERSTELLEN WOLLT
-xhr.send(data);
+    console.log(data);
+    xhr.send(data);
 }
 
 function listeAktualisieren(anzahl) {
 
-    if(anzahl>eventArray.length || anzahl === -1){
+    if (anzahl > eventArray.length || anzahl === -1) {
         anzahl = eventArray.length;
     }
+    console.log(anzahl);
 
     var txt = "<table class='calenderList'>" +
         "<tr>" +
@@ -101,19 +116,19 @@ function listeAktualisieren(anzahl) {
     for (i = 0; i < anzahl; i++) {
         txt += "<tr>" +
             "<td>" +
-            eventArray[anzahl].title +
-            "</td>"+
+            eventArray[i].title +
+            "</td>" +
             "<td>" +
-            eventArray[anzahl].start.substr(11, 5) +
+            eventArray[i].start.substr(11, 5) +
             "</td>\n" +
-            "<td>"+
-            eventArray[anzahl].end.substr(0, 10) +
+            "<td>" +
+            eventArray[i].start.substr(0, 10) +
             "</td>" +
             "<td>" +
-            eventArray[anzahl].end.substr(11, 5) +
+            eventArray[i].end.substr(11, 5) +
             "</td>" +
-            "<td>"+
-            eventArray[anzahl].end.substr(0, 10) +
+            "<td>" +
+            eventArray[i].end.substr(0, 10) +
             "</td>" +
             "</tr>"
     }
@@ -122,7 +137,34 @@ function listeAktualisieren(anzahl) {
     document.getElementById("dasHauptDivElementWoEureEinträgeAngezeigtWerden").innerHTML = txt;
 }
 
+var showPopup = function (event) {
+    event.preventDefault();
+    document
+        .getElementById('popup-form')
+        .style.display = 'block';
+};
 
-termineAuslesen();
+
+function test() {
+    var xhttp = new XMLHttpRequest();
+    var data = "test";
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            data = "title";
+        }
+    };
+    xhttp.open("POST", "http://dhbw.ramonbisswanger.de/calendar/manuelw/events", true);
+    xhttp.send({
+            "title": " Christmas Feast",
+            "location": "Stuttgart",
+            "organizer": "dhbw@bisswanger.de",
+            "start": "2014-12-24T18:00",
+            "end": "2014-12-24T23:30",
+            "status": "Busy",
+            "allday": 0,
+            "webpage": "http://www.bisswanger.de/"
+        }
+    );
+}
 
 
