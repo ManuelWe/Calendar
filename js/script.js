@@ -14,7 +14,7 @@ function termineAuslesen() {
 //dieses Skript ließt alle Einträge und gibt sie in einer Tabelle aus
 
     var xhttp = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/test/events";
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
     xhttp.open("GET", url, false);
     xhttp.send();
 
@@ -61,7 +61,7 @@ function termineAuslesen() {
 function eintragErstellen() {
 //Dieses Skript ERSTELLT einen eintrag
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/manuelw/events";
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
     xhr.onreadystatechange = function () {
         console.log(xhr.readyState);
         console.log(xhr.status);
@@ -74,6 +74,7 @@ function eintragErstellen() {
 
     var data = JSON.stringify(
         {
+            "id": 1,
             "title": "Ramon 3",
             "location": null,
             "organizer": "test@dsad.com",
