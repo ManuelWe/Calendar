@@ -14,6 +14,7 @@
 
 </head>
 <body onload="init()">
+
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -36,30 +37,29 @@
     </div>
 </nav>
 
-<div id="dasHauptDivElementWoEureEinträgeAngezeigtWerden">
-    Dieser Text wird vollständig vom Javascript überschrieben
-</div>
+<div id="liste">
+    <div id="dasHauptDivElementWoEureEinträgeAngezeigtWerden">
+        Dieser Text wird vollständig vom Javascript überschrieben
+    </div>
 
 
-
-<div class="dropdown">
-    <button class="dropbtn">Auswahl</button>
-    <div class="dropdown-content">
-        <a href="javascript:listeAktualisieren(1);">5</a>
-        <a href="javascript:listeAktualisieren(2)">10</a>
-        <a href="javascript:listeAktualisieren(20)">20</a>
-        <a href="javascript:listeAktualisieren(-1)">All</a>
-        <a href="javascript:eintragErstellen()">Eintrag erstellen</a>
-        <a href="javascript:test()">test</a>
+    <div class="dropdown">
+        <button class="dropbtn">Auswahl</button>
+        <div class="dropdown-content">
+            <a href="javascript:listeAktualisieren(5);">5</a>
+            <a href="javascript:listeAktualisieren(10)">10</a>
+            <a href="javascript:listeAktualisieren(20)">20</a>
+            <a href="javascript:listeAktualisieren(-1)">All</a>
+            <a href="javascript:eintragErstellen()">Eintrag erstellen</a>
+            <a href="javascript:test()">test</a>
+        </div>
     </div>
 </div>
 
-
 <div class="col-sm-offset-3 col-md-6 conformwrap">
-    <h3>Neuer Kontakt erstellen</h3>
-
 
     <div id="popup-form">
+        <h3>Neuer Kontakt erstellen</h3>
         <!--begin HTML Form-->
         <form class="form-horizontal" role="form" method="post" action=" ">
 
@@ -103,32 +103,33 @@
 
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6 col-sm-offset-3">
-                    <button type="submit" id="submit" name="submit" class="btn-lg btn-primary btn-block">Erstellen</button>
+                    <button type="submit" id="submit" name="submit" class="btn-lg btn-primary btn-block">Erstellen
+                    </button>
                 </div>
             </div>
-            </form>
-        </div>
+        </form>
+    </div>
 </div>
 
 
-    <!--
-    <div id="contact">Contact</div>
+<!--
+<div id="contact">Contact</div>
 
-    <div id="contactForm">
+<div id="contactForm">
 
-        <h1>Keep in touch!</h1>
-        <small>I'll get back to you as quickly as possible</small>
+    <h1>Keep in touch!</h1>
+    <small>I'll get back to you as quickly as possible</small>
 
-        <form action="#">
-            <input placeholder="Name" type="text" required/>
-            <input placeholder="Email" type="email" required/>
-            <input placeholder="Subject" type="text" required/>
-            <textarea placeholder="Comment"></textarea>
-            <input class="formBtn" type="submit"/>
-            <input class="formBtn" type="reset"/>
-        </form>
-    </div>
-    -->
+    <form action="#">
+        <input placeholder="Name" type="text" required/>
+        <input placeholder="Email" type="email" required/>
+        <input placeholder="Subject" type="text" required/>
+        <textarea placeholder="Comment"></textarea>
+        <input class="formBtn" type="submit"/>
+        <input class="formBtn" type="reset"/>
+    </form>
+</div>
+-->
 
 
 </body>

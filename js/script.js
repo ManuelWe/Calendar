@@ -136,6 +136,7 @@ function listeAktualisieren(anzahl) {
 }
 
 var showPopup = function (event) {
+    document.getElementById("liste").style.display = 'none';
     event.preventDefault();
     document
         .getElementById('popup-form')
