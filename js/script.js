@@ -74,7 +74,6 @@ function eintragErstellen() {
 
     var data = JSON.stringify(
         {
-            "id": 1,
             "title": "Ramon 3",
             "location": null,
             "organizer": "test@dsad.com",
@@ -82,13 +81,11 @@ function eintragErstellen() {
             "end": "2017-12-11T11:15",
             "status": "Busy",
             "allday": false,
-            "webpage": "google.com",
-            "categories": []
+            "webpage": "google.com"
         }
     );
 
-//EINKOMMENTIEREN WENN IHR WIEDER TERMINE ERSTELLEN WOLLT
-    console.log(data);
+//EINKOMMENTIEREN WENN WIEDER TERMINE ERSTELLT WERDEN SOLLEN
     xhr.send(data);
 }
 
@@ -146,25 +143,7 @@ var showPopup = function (event) {
 
 
 function test() {
-    var xhttp = new XMLHttpRequest();
-    var data = "test";
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            data = "title";
-        }
-    };
-    xhttp.open("POST", "http://dhbw.ramonbisswanger.de/calendar/manuelw/events", true);
-    xhttp.send({
-            "title": " Christmas Feast",
-            "location": "Stuttgart",
-            "organizer": "dhbw@bisswanger.de",
-            "start": "2014-12-24T18:00",
-            "end": "2014-12-24T23:30",
-            "status": "Busy",
-            "allday": 0,
-            "webpage": "http://www.bisswanger.de/"
-        }
-    );
+
 }
 
 
