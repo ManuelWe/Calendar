@@ -11,14 +11,15 @@ function init() {
 
 
 function termineAuslesen() {
+    console.log("hi");
 //dieses Skript ließt alle Einträge und gibt sie in einer Tabelle aus
 
-    var xhttp = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
-    xhttp.open("GET", url, false);
-    xhttp.send();
+    xhr.open("GET", url, false);
+    xhr.send();
 
-    eventArray = JSON.parse(xhttp.responseText);
+    eventArray = JSON.parse(xhr.responseText);
 
     var txt = "<table class='calenderList'>" +
         "<tr>" +
@@ -63,8 +64,6 @@ function eintragErstellen() {
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
     xhr.onreadystatechange = function () {
-        console.log(xhr.readyState);
-        console.log(xhr.status);
         if (this.readyState === 4 && this.status === 200) {
             var json = JSON.parse(xhr.responseText);
         }
@@ -88,6 +87,7 @@ function eintragErstellen() {
 
 //EINKOMMENTIEREN WENN WIEDER TERMINE ERSTELLT WERDEN SOLLEN
     xhr.send(data);
+    setTimeout(termineAuslesen, 100);
 }
 
 function listeAktualisieren(anzahl) {
@@ -95,7 +95,6 @@ function listeAktualisieren(anzahl) {
     if (anzahl > eventArray.length || anzahl === -1) {
         anzahl = eventArray.length;
     }
-    console.log(anzahl);
 
     var txt = "<table class='calenderList'>" +
         "<tr>" +
@@ -143,9 +142,15 @@ var showPopup = function (event) {
         .style.display = 'block';
 };
 
-function deleteEntry(){
+function deleteEntry(eventId) {
+    var xhr = new XMLHttpRequest();
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventId;
+    xhr.open("DELETE", url, true);
+    xhr.send();
+    setTimeout(termineAuslesen, 100);
 
 }
+
 function test() {
 
 }
