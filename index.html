@@ -15,46 +15,50 @@
 </head>
 <body onload="init()">
 
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="MyNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#"><img src="img/w3newbie.png"></a>
+<div class="list">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="MyNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><img src="img/w3newbie.png"></a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar right">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a id="popup-clickie" href="fallback-link-to-form-page">Termin erstellen</a></li>
+                    <li><a href="#">irgendwas</a></li>
+                    <li><a href="#">Hello world</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-            <ul class="nav navbar-nav navbar right">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a id="popup-clickie" href="fallback-link-to-form-page">Termin erstellen</a></li>
-                <li><a href="javascript:deleteEntry(1407)">Delete Entry</a></li>    <!--ID muss übergeben werden. 1366 ist ein testwert.-->
-                <li><a href="#">Hello world</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
+    </nav>
+
+    <div id="liste">
+        <div id="dasHauptDivElementWoEureEinträgeAngezeigtWerden">
+            Dieser Text wird vollständig vom Javascript überschrieben
         </div>
-    </div>
-</nav>
-
-<div id="liste">
-    <div id="dasHauptDivElementWoEureEinträgeAngezeigtWerden">
-        Dieser Text wird vollständig vom Javascript überschrieben
-    </div>
 
 
-    <div class="dropdown">
-        <button class="dropbtn">Auswahl</button>
-        <div class="dropdown-content">
-            <a href="javascript:listeAktualisieren(5)">5</a>
-            <a href="javascript:listeAktualisieren(10)">10</a>
-            <a href="javascript:listeAktualisieren(20)">20</a>
-            <a href="javascript:listeAktualisieren(-1)">All</a>
-            <a href="javascript:eintragErstellen()">Eintrag erstellen</a>
-            <a href="javascript:test()">test</a>
+        <div class="dropdown">
+            <button class="dropbtn">Auswahl</button>
+            <div class="dropdown-content">
+                <a href="javascript:listeAktualisieren(5)">5</a>
+                <a href="javascript:listeAktualisieren(10)">10</a>
+                <a href="javascript:listeAktualisieren(20)">20</a>
+                <a href="javascript:listeAktualisieren(-1)">All</a>
+                <a href="javascript:eintragErstellen()">Eintrag erstellen</a>
+                <a href="javascript:test()">test</a>
+            </div>
         </div>
     </div>
 </div>
+
+
 
 <div class="col-sm-offset-3 col-md-6 conformwrap">
 
@@ -63,11 +67,11 @@
         <form class="form-horizontal" role="form" method="post" action=" ">
             <div class="form-group">
                 <label>Title</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="First & Last">
+                <input type="text" class="form-control" id="name" name="name" placeholder="First & Last">
             </div>
             <div class="form-group">
                 <label>Location</label>
-                    <input type="email" class="conc form-control" id="email" name="email" placeholder="you@domain.com">
+                <input type="email" class="conc form-control" id="email" name="email" placeholder="you@domain.com">
             </div>
             <div class="form-group">
                 <label>Organizer</label>
@@ -98,7 +102,7 @@
                 <input type="email" class="conc form-control" id="email" name="email" placeholder="you@domain.com">
             </div>
             <div class="form-group">
-            <label>Categorie</label>
+                <label>Categorie</label>
                 <input type="email" class="conc form-control" id="email" name="email" placeholder="you@domain.com">
             </div>
 

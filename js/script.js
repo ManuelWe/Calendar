@@ -1,8 +1,10 @@
 var txt;
 var eventArray;
+var selectedRow;
 
 
 function init() {
+
     termineAuslesen();
     document
         .getElementById('popup-clickie')
@@ -11,7 +13,6 @@ function init() {
 
 
 function termineAuslesen() {
-    console.log("hi");
 //dieses Skript ließt alle Einträge und gibt sie in einer Tabelle aus
 
     var xhr = new XMLHttpRequest();
@@ -25,9 +26,9 @@ function termineAuslesen() {
         "<tr>" +
         "<th>Eventname" +
         "</th>" +
-        "<th>Starttime" +
-        "</th>" +
         "<th>Startdate" +
+        "</th>" +
+        "<th>Starttime" +
         "</th>" +
         "<th>Endtime" +
         "</th>" +
@@ -36,15 +37,16 @@ function termineAuslesen() {
         "</tr>"
 
     for (event in eventArray) {
-        txt += "<tr>" +
+        tableRow = "tableRow" + event
+        txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + event + ")'>" +
             "<td>" +
             eventArray[event].title +
             "</td>" +
             "<td>" +
-            eventArray[event].start.substr(11, 5) +
+            eventArray[event].end.substr(0, 10) +
             "</td>\n" +
             "<td>" +
-            eventArray[event].end.substr(0, 10) +
+            eventArray[event].start.substr(11, 5) +
             "</td>" +
             "<td>" +
             eventArray[event].end.substr(11, 5) +
@@ -100,9 +102,9 @@ function listeAktualisieren(anzahl) {
         "<tr>" +
         "<th>Eventname" +
         "</th>" +
-        "<th>Starttime" +
-        "</th>" +
         "<th>Startdate" +
+        "</th>" +
+        "<th>Starttime" +
         "</th>" +
         "<th>Endtime" +
         "</th>" +
@@ -111,15 +113,16 @@ function listeAktualisieren(anzahl) {
         "</tr>"
 
     for (i = 0; i < anzahl; i++) {
-        txt += "<tr>" +
+        tableRow = "tableRow" + i;
+        txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + event + ")'>" +
             "<td>" +
             eventArray[i].title +
             "</td>" +
             "<td>" +
-            eventArray[i].start.substr(11, 5) +
+            eventArray[i].start.substr(0, 10) +
             "</td>\n" +
             "<td>" +
-            eventArray[i].start.substr(0, 10) +
+            eventArray[i].start.substr(11, 5) +
             "</td>" +
             "<td>" +
             eventArray[i].end.substr(11, 5) +
@@ -142,14 +145,47 @@ var showPopup = function (event) {
         .style.display = 'block';
 };
 
-function deleteEntry(eventId) {
+function deleteEntry() {
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventId;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventArray[selectedRow].id;
     xhr.open("DELETE", url, true);
     xhr.send();
+
     setTimeout(termineAuslesen, 100);
 
+    window.location.href = 'index.html';
+
 }
+
+function targetRow(row) {
+
+    selectedRow = row;
+    window.location.href = 'details.html?id=' + eventArray[selectedRow].id;
+
+}
+
+
+function retrieveEvent() {
+    var id = getParameterByName("id", window.location.href);
+
+    var xhr = new XMLHttpRequest();
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + id;
+    xhr.open("GET", url, false);
+    xhr.send();
+
+    eventArray = JSON.parse(xhr.responseText);
+}
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 
 function test() {
 
