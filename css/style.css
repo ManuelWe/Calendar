@@ -1,3 +1,5 @@
+html { overflow-y:scroll; }
+
 .navbar {
     margin-bottom: 0;
     border-radius: 0;
@@ -31,12 +33,18 @@ th, td {
     padding: 8px;
 }
 
-tr:nth-child(even) {background-color: #f2f2f2;}
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
 
 .calenderList {
     border-collapse: separate;
     width: 100%;
     border: 1px;
+}
+
+#eventTable tr:nth-child(even) {
+    background-color: #888888;
 }
 
 .dropbtn {
@@ -49,7 +57,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 }
 
 .dropdown {
-    position: relative;
+    position: absolute;
     display: inline-block;
 }
 
@@ -88,3 +96,37 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     background-color: #5E4485;
 }
 
+.list {
+    position: absolute;
+    z-index: 2;
+    background-color: white;
+    width: 1000px;
+    height: 500px;
+    left: 50%;
+    margin-left: -500px;
+}
+
+.entryDetails {
+    z-index: 1;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    background-color: red;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -100px;
+}
+
+#entryTitle {
+    float: left;
+    margin-right: 100px;
+}
+
+.iconButton {
+    cursor: pointer;
+}
+
+.iconButton:hover {
+    box-shadow: 0px 8px 16px 0px rgba(50,100,0,0.2);
+}

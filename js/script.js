@@ -1,5 +1,5 @@
-var txt;
 var eventArray;
+var eventlistArray;
 var selectedRow;
 
 
@@ -20,7 +20,7 @@ function termineAuslesen() {
     xhr.open("GET", url, false);
     xhr.send();
 
-    eventArray = JSON.parse(xhr.responseText);
+    eventlistArray = JSON.parse(xhr.responseText);
 
     var txt = "<table class='calenderList'>" +
         "<tr>" +
@@ -36,29 +36,29 @@ function termineAuslesen() {
         "</th>" +
         "</tr>"
 
-    for (event in eventArray) {
+    for (event in eventlistArray) {
         tableRow = "tableRow" + event
         txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + event + ")'>" +
             "<td>" +
-            eventArray[event].title +
+            eventlistArray[event].title +
             "</td>" +
             "<td>" +
-            eventArray[event].end.substr(0, 10) +
+            eventlistArray[event].end.substr(0, 10) +
             "</td>\n" +
             "<td>" +
-            eventArray[event].start.substr(11, 5) +
+            eventlistArray[event].start.substr(11, 5) +
             "</td>" +
             "<td>" +
-            eventArray[event].end.substr(11, 5) +
+            eventlistArray[event].end.substr(11, 5) +
             "</td>" +
             "<td>" +
-            eventArray[event].end.substr(0, 10) +
+            eventlistArray[event].end.substr(0, 10) +
             "</td>" +
             "</tr>"
 
     }
     txt += "</table>"
-    document.getElementById("dasHauptDivElementWoEureEinträgeAngezeigtWerden").innerHTML = txt;
+    document.getElementById("entrysList").innerHTML = txt;
 }
 
 function eintragErstellen() {
@@ -76,7 +76,7 @@ function eintragErstellen() {
     var data = JSON.stringify(
         {
             "id": 1,
-            "title": "Ramon 3",
+            "title": "Toller Termin",
             "location": null,
             "organizer": "test@dsad.com",
             "start": "2017-12-11T11:11",
@@ -94,8 +94,8 @@ function eintragErstellen() {
 
 function listeAktualisieren(anzahl) {
 
-    if (anzahl > eventArray.length || anzahl === -1) {
-        anzahl = eventArray.length;
+    if (anzahl > eventlistArray.length || anzahl === -1) {
+        anzahl = eventlistArray.length;
     }
 
     var txt = "<table class='calenderList'>" +
@@ -116,25 +116,25 @@ function listeAktualisieren(anzahl) {
         tableRow = "tableRow" + i;
         txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + event + ")'>" +
             "<td>" +
-            eventArray[i].title +
+            eventlistArray[i].title +
             "</td>" +
             "<td>" +
-            eventArray[i].start.substr(0, 10) +
+            eventlistArray[i].start.substr(0, 10) +
             "</td>\n" +
             "<td>" +
-            eventArray[i].start.substr(11, 5) +
+            eventlistArray[i].start.substr(11, 5) +
             "</td>" +
             "<td>" +
-            eventArray[i].end.substr(11, 5) +
+            eventlistArray[i].end.substr(11, 5) +
             "</td>" +
             "<td>" +
-            eventArray[i].end.substr(0, 10) +
+            eventlistArray[i].end.substr(0, 10) +
             "</td>" +
             "</tr>"
     }
 
     txt += "</table>"
-    document.getElementById("dasHauptDivElementWoEureEinträgeAngezeigtWerden").innerHTML = txt;
+    document.getElementById("entrysList").innerHTML = txt;
 }
 
 var showPopup = function (event) {
@@ -147,43 +147,83 @@ var showPopup = function (event) {
 
 function deleteEntry() {
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventArray[selectedRow].id;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
     xhr.open("DELETE", url, true);
     xhr.send();
 
     setTimeout(termineAuslesen, 100);
 
-    window.location.href = 'index.html';
+    toggleView();
 
 }
 
 function targetRow(row) {
 
     selectedRow = row;
-    window.location.href = 'details.html?id=' + eventArray[selectedRow].id;
+    toggleView();
+    retrieveEvent();
 
 }
 
+function toggleView() {
+    if (document.getElementsByClassName("list")[0].style.zIndex === "1") {
+        document.getElementsByClassName("list")[0].style.zIndex = "2";
+        document.getElementsByClassName("entryDetails")[0].style.zIndex = "1";
+    } else {
+        document.getElementsByClassName("list")[0].style.zIndex = "1";
+        document.getElementsByClassName("entryDetails")[0].style.zIndex = "2";
+    }
+}
 
 function retrieveEvent() {
-    var id = getParameterByName("id", window.location.href);
 
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + id;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
     xhr.open("GET", url, false);
     xhr.send();
 
     eventArray = JSON.parse(xhr.responseText);
-}
 
-function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+    var txt = "<table id='eventTable'>" +
+        "<tr>" + "<td>" +
+        "<img src='img/clockIcon.png' width='20' height='20'" +
+        "</td>" + "<td>" +
+        eventArray.start.substr(0, 10) + " , " +
+        eventArray.start.substr(11, 5)
+    if(eventArray.start.substr(0, 10) !== eventArray.end.substr(0, 10)){
+        txt += " - " + eventArray.end.substr(0, 10) + " , " +
+            eventArray.end.substr(11, 5)
+    }
+    txt += "</td>" + "</tr>" +
+        "<tr>" + "<td>" +
+        "<img src='img/locationIcon.png' width='20' height='20'" +
+        "</td>" + "<td>" +
+        eventArray.location +
+        "</td>" + "</tr>" +
+        "<tr>" + "<td>" +
+        "<img src='img/organizerIcon.png' width='20' height='20'" +
+        "</td>" + "<td>" +
+        eventArray.organizer +
+        "</td>" + "</tr>" +
+        "<tr>" + "<td>" +
+        "<img src='img/statusIcon.png' width='20' height='20'" +
+        "</td>" + "<td>" +
+        eventArray.status +
+        "</td>" + "</tr>" +
+        "<tr>" + "<td>" +
+        "<img src='' alt='allday' width='20' height='20'" +
+        "</td>" + "<td>" +
+        eventArray.allday +
+        "</td>" + "</tr>" +
+        "<tr>" + "<td>" +
+        "<img src='img/linkIcon.png' width='20' height='20'" +
+        "</td>" + "<td>" +
+        "<a href='http://" + eventArray.webpage + "'>" + eventArray.webpage + "</a>" +
+        "</td>" + "</tr>" +
+        "</table>"
+    document.getElementById("entryTable").innerHTML = txt;
+    document.getElementById("entryTitle").innerHTML = eventArray.title;
+
 }
 
 
