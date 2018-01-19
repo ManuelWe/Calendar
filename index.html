@@ -5,12 +5,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/fullcalendar.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src='js/jquery.min.js'></script>
+    <script src='js/moment.min.js'></script>
+    <script src='js/fullcalendar.js'></script>
     <script src="js/script.js"></script>
+    <script> $(document).ready(function () {
 
+        // page is now ready, initialize the calendar...
+
+        $('#calendar').fullCalendar({
+            // put your options and callbacks here
+        })
+
+    });
+    </script>
 
 </head>
 <body onload="init()">
@@ -27,26 +39,25 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar right">
-                <li class="active"><a href="#">Home</a></li>
+                <li class="active"><a href="javascript:toggleView('listView')">Home</a></li>
                 <li><a id="popup-clickie" href="fallback-link-to-form-page">Termin erstellen</a></li>
                 <li><a href="javascript:eintragErstellen()">Test erstellen</a></li>
-                <li><a href="#">Hello world</a></li>
+                <li><a href="javascript:toggleView('monthView')">Month View</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="list">
-
-    <div id="liste">
-        <div id="entrysList">
+<div class="listView">
+    <div class="list">
+        <div id="listEntry">
             Dieser Text wird vollständig vom Javascript überschrieben
         </div>
 
 
         <div class="dropdown">
-            <button class="dropbtn">Auswahl</button>
+            <button class="btn dropbtn">Auswahl</button>
             <div class="dropdown-content">
                 <a href="javascript:listeAktualisieren(5)">5</a>
                 <a href="javascript:listeAktualisieren(10)">10</a>
@@ -55,26 +66,44 @@
             </div>
         </div>
     </div>
+
+    <div class="entryDetails">
+        <div id="entryTitle">
+            Dieser Text wird vollständig vom Javascript überschrieben
+        </div>
+
+        <input id="crossIcon" class="iconButton" type="image" src="img/crossIcon.png" width="20" height="20"
+               onclick="javascript:toggleView('listView')" alt="Icon Cross">
+        <input id="deleteIcon" class="iconButton" type="image" src="img/deleteIcon.png" width="20" height="20"
+               onclick="javascript:deleteEntry()" alt="Icon Delete">
+        <input id="editIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
+               onclick="javascript:alert('Hier können Sie bald etwas Bearbeiten.');" alt="Icon Edit">
+        <div id="entryCategories">
+            Dieser Text wird vollständig vom Javascript überschrieben
+        </div>
+        <input id="editClassIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
+               onclick="javascript:toggleView('newCategory');retrieveCategories()" alt="Icon Edit">
+        <div id="entryTable">
+            Dieser Text wird vollständig vom Javascript überschrieben
+        </div>
+    </div>
+
+    <div class="newCategory">
+        <h3>Add Category</h3>
+        <input id="crossIcon" class="iconButton" type="image" src="img/crossIcon.png" width="20" height="20"
+               onclick="javascript:toggleView('entryDetails')" alt="Icon Cross">
+        <input type="text" id="inputCategory" name="Category" placeholder="New Category">
+        <button id="addCategory" onclick="javascript:createCategory()">New Category</button>
+        <div id="tableCategories">
+            Dieser Text wird vollständig vom Javascript überschrieben
+        </div>
+
+    </div>
 </div>
 
-<div class="entryDetails">
-    <div id="entryTitle">
-        Dieser Text wird vollständig vom Javascript überschrieben
-    </div>
-    <input id="editIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
-           onclick="javascript:alert('Hier können Sie bald etwas Bearbeiten.');" alt="Icon Edit">
-    <input id="deleteIcon" class="iconButton" type="image" src="img/deleteIcon.png" width="20" height="20"
-           onclick="javascript:deleteEntry()" alt="Icon Delete">
-    <input id="crossIcon" class="iconButton" type="image" src="img/crossIcon.png" width="20" height="20"
-           onclick="javascript:toggleView()" alt="Icon Cross">
-    <div id="entryCategories">
-        Dieser Text wird vollständig vom Javascript überschrieben
-    </div>
-    <div id="entryTable">
-        Dieser Text wird vollständig vom Javascript überschrieben
-    </div>
+<div class="monthView">
+    <div id='calendar'></div>
 </div>
-
 
 <div class="col-sm-offset-3 col-md-6 conformwrap">
 
