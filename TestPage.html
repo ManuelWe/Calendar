@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<br><br>
+<form class="form-horizontal" action="Placeholder" method="POST">
+    <div class="row">
+        <div class="span6">
+            <!-- Text input-->
+            <div class="control-group">
+                <label class="control-label" for="employeeId">Placeholder</label>  <!-- Employee ID* -->
+                <div class="controls">
+                    <input id="employeeId" name="employeeId" type="text" value="Placeholder" class="input-xlarge" required="" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="span6">
+            <!-- Text input-->
+            <div class="control-group">
+                <label class="control-label" for="email">Placeholder</label>  <!-- E-Mail* -->
+                <div class="controls">
+                    <input id="email" name="email" type="text" value="placeholder" class="input-xlarge" required="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span6">
+            <!-- Text input-->
+            <div class="control-group">
+                <label class="control-label" for="firstname">Placeholder</label>  <!-- First Name* -->
+                <div class="controls">
+                    <input id="firstname" name="firstname" type="text" value="Placeholder" class="input-xlarge" required="">
+
+                </div>
+            </div>
+        </div>
+        <div class="span6">
+            <!-- Text input-->
+            <div class="control-group">
+                <label class="control-label" for="lastname">Placeholder</label>   <!-- Last Name* -->
+                <div class="controls">
+                    <input id="lastname" name="lastname" type="text" value="Placeholder" class="input-xlarge" required="">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name = "Profile" value="<?php echo $allTranslation[43][$languageChoose] ?>" class="btn btn-primary pull-right">
+    <input type="submit"  value="<?php echo $allTranslation[43][$languageChoose] ?>" class="btn btn-primary pull-right">  <!-- Save -->
+    <a class="btn btn-primary pull-right" href=<?php echo '"'.ROOT_PATH.'/'.PAGE_INDEX.'"' ?>><?php echo $allTranslation[42][$languageChoose]?></a>   <!-- Back -->
+    <a target="popup" class="btn btn-primary pull-right" onclick="window.open('', 'popup', 'width=600, height=360, resizable=yes, left=500, top=200')" href="PopUp_ChangeLanguage.php"><?php echo $allTranslation[44][$languageChoose] ?></a>	 <!-- Change Language -->
+</form>
+</body>
+</html>
