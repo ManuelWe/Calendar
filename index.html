@@ -27,6 +27,7 @@
 </head>
 <body onload="init()">
 
+<!--##################### Navbar ##################-->
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -40,8 +41,8 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar right">
                 <li class="active"><a href="javascript:toggleView('listView')">Home</a></li>
-                <li><a id="popup-clickie" href="TestPage.html">Termin erstellen</a></li>
-                <li><a href="javascript:eintragErstellen()">Test erstellen</a></li>
+                <li><a href="javascript:toggleView('createEntry')">Termin erstellen</a></li>
+                <li><a href="javascript:createEntry()">Test erstellen</a></li>
                 <li><a href="javascript:toggleView('monthView')">Month View</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>
@@ -49,6 +50,7 @@
     </div>
 </nav>
 
+<!--######################### list View #################-->
 <div class="listView">
     <div class="list">
         <div id="listEntry">
@@ -59,10 +61,10 @@
         <div class="dropdown">
             <button class="btn dropbtn">Auswahl</button>
             <div class="dropdown-content">
-                <a href="javascript:listeAktualisieren(5)">5</a>
-                <a href="javascript:listeAktualisieren(10)">10</a>
-                <a href="javascript:listeAktualisieren(20)">20</a>
-                <a href="javascript:listeAktualisieren(-1)">All</a>
+                <a href="javascript:updateList(5)">5</a>
+                <a href="javascript:updateList(10)">10</a>
+                <a href="javascript:updateList(20)">20</a>
+                <a href="javascript:updateList(-1)">All</a>
             </div>
         </div>
     </div>
@@ -71,16 +73,16 @@
             Dieser Text wird vollständig vom Javascript überschrieben
         </div>
 
-        <input id="crossIcon" class="iconButton" type="image" src="img/crossIcon.png" width="20" height="20"
+        <input id="crossIconEntry" class="iconButton" type="image" src="img/crossIcon.png" width="20" height="20"
                onclick="javascript:toggleView('listView')" alt="Icon Cross">
         <input id="deleteIcon" class="iconButton" type="image" src="img/deleteIcon.png" width="20" height="20"
                onclick="javascript:deleteEntry()" alt="Icon Delete">
         <input id="editIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
                onclick="javascript:alert('Hier können Sie bald etwas Bearbeiten.');" alt="Icon Edit">
-        <div id="entryCategories">
+        <div id="displayCategories">
             Dieser Text wird vollständig vom Javascript überschrieben
         </div>
-        <input id="editClassIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
+        <input id="editCategoryIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
                onclick="javascript:toggleView('newCategory');retrieveCategories()" alt="Icon Edit">
         <div id="entryTable">
             Dieser Text wird vollständig vom Javascript überschrieben
@@ -89,7 +91,7 @@
 
     <div class="newCategory">
         <h3>Add Category</h3>
-        <input id="crossIcon" class="iconButton" type="image" src="img/crossIcon.png" width="20" height="20"
+        <input id="crossIconCategory" class="iconButton" type="image" src="img/crossIcon.png" width="20" height="20"
                onclick="javascript:toggleView('entryDetails')" alt="Icon Cross">
         <input type="text" id="inputCategory" name="Category" placeholder="New Category">
         <button id="addCategory" onclick="javascript:createCategory()">New Category</button>
@@ -100,10 +102,19 @@
     </div>
 </div>
 
+<!--######################## Month View #################-->
 <div class="monthView">
     <div id='calendar'></div>
 </div>
 
+<!--######################### Create Entry ###################-->
+<div class="createEntry">
+    Hier rein kommt der Inhalt um einen eintrag zu erstellen
+
+</div>
+
+
+<!--
 <div class="col-sm-offset-3 col-md-6 conformwrap">
 
     <div id="popup-form">
@@ -159,7 +170,7 @@
         </form>
     </div>
 </div>
-
+-->
 
 <!--
 <div id="contact">Contact</div>
