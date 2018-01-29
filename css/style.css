@@ -130,15 +130,7 @@ tr:nth-child(odd) {
 
 /*#################### Entry Details #################*/
 .entryDetails {
-    z-index: 1;
-    width: 40%;
-    height: 70%;
-    position: absolute;
-    background-color: red;
-    top: 50%;
-    left: 50%;
-    margin-top: -22%;
-    margin-left: -20%;
+
 }
 
 #entryTable {
@@ -172,15 +164,7 @@ tr:nth-child(odd) {
 
 /*################## Category Container ##############*/
 .newCategory {
-    z-index: 1;
-    width: 300px;
-    height: 300px;
-    position: absolute;
-    background-color: green;
-    top: 50%;
-    left: 50%;
-    margin-top: -200px;
-    margin-left: -150px;
+
 }
 
 #displayCategories {

@@ -107,7 +107,7 @@ function retrieveEvent() {
         "<a href='http://" + eventArray.webpage + "'>" + eventArray.webpage + "</a>" +
         "</td>" + "</tr>" +
         "</table>"
-    document.getElementById("entryTitle").innerHTML = "<h3>" + eventArray.title + "</h3>";
+    document.getElementById("entryTitle").innerHTML = "<h3 class='modal-title'>" + eventArray.title + "</h3>";
     document.getElementById("entryTable").innerHTML = txt;
 
     if (eventArray.categories.length !== 0) {
@@ -157,7 +157,7 @@ function deleteEntry() {
 
     setTimeout(retrieveEvents, 100);
 
-    toggleView('listView');
+    $(".entryDetails").modal("hide");
 
 }
 
@@ -212,6 +212,9 @@ function updateList(count) {
 
 //retrieves all Categories and displays them in a list
 function retrieveCategories() {
+
+    $(".newCategory").modal();
+
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories";
     xhr.open("GET", url, false);
@@ -241,7 +244,6 @@ function retrieveCategories() {
 
 function markCategories() {
     for (category in eventArray.categories) {
-        console.log(eventArray.categories[category].id);
         document.getElementById("category" + eventArray.categories[category].id).style.backgroundColor = "#5E4485";
     }
 
@@ -260,7 +262,7 @@ function targetCategory(category) {
     setTimeout(retrieveEvent, 100);
 }
 
-function removeCategory(selectedCategory){
+function removeCategory(selectedCategory) {
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories/" + categorylistArray[selectedCategory].id +
         "/" + eventlistArray[selectedRow].id;
@@ -269,7 +271,7 @@ function removeCategory(selectedCategory){
 
 }
 
-function deleteCategory(selectedCategory){
+function deleteCategory(selectedCategory) {
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories/" + categorylistArray[selectedCategory].id;
     xhr.open("DELETE", url, true);
@@ -322,25 +324,20 @@ function addCategory(selectedCategory) {
 function targetRow(row) {
 
     selectedRow = row;
-    toggleView('entryDetails');
+    $(".entryDetails").modal();
     retrieveEvent();
-
 }
+
 
 //handles which container is displayed
 function toggleView(show) {
-    if (show === "entryDetails" || show === "newCategory") {
-        document.getElementsByClassName("newCategory")[0].style.zIndex = "1";
-        document.getElementsByClassName("listView")[0].style.zIndex = "2";
-        document.getElementsByClassName("monthView")[0].style.zIndex = "1";
-    }
-    else {
-        document.getElementsByClassName("listView")[0].style.zIndex = "1";
-        document.getElementsByClassName("monthView")[0].style.zIndex = "1";
-        document.getElementsByClassName("entryDetails")[0].style.zIndex = "1";
-        document.getElementsByClassName("createEntry")[0].style.zIndex = "1";
-    }
+
+    document.getElementsByClassName("listView")[0].style.zIndex = "1";
+    document.getElementsByClassName("monthView")[0].style.zIndex = "1";
+    document.getElementsByClassName("createEntry")[0].style.zIndex = "1";
+
     document.getElementsByClassName(show)[0].style.zIndex = "3";
+
 }
 
 function test() {

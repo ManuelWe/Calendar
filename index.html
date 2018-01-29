@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="css/fullcalendar.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src='js/jquery.min.js'></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src='js/moment.min.js'></script>
     <script src='js/fullcalendar.js'></script>
     <script src="js/script.js"></script>
@@ -67,39 +67,65 @@
                 <a href="javascript:updateList(-1)">All</a>
             </div>
         </div>
-    </div>
-    <div class="entryDetails">
-        <div id="entryTitle">
-            Dieser Text wird vollständig vom Javascript überschrieben
-        </div>
-
-        <input id="crossIconEntry" class="iconButton" type="image" src="img/crossIcon.png" width="20" height="20"
-               onclick="javascript:toggleView('listView')" alt="Icon Cross">
-        <input id="deleteIcon" class="iconButton" type="image" src="img/deleteIcon.png" width="20" height="20"
-               onclick="javascript:deleteEntry()" alt="Icon Delete">
-        <input id="editIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
-               onclick="javascript:alert('Hier können Sie bald etwas Bearbeiten.');" alt="Icon Edit">
-        <div id="displayCategories">
-            Dieser Text wird vollständig vom Javascript überschrieben
-        </div>
-        <input id="editCategoryIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
-               onclick="javascript:toggleView('newCategory');retrieveCategories()" alt="Icon Edit">
-        <div id="entryTable">
-            Dieser Text wird vollständig vom Javascript überschrieben
-        </div>
-    </div>
-
-    <div class="newCategory">
-        <h3>Add Category</h3>
-        <input id="crossIconCategory" class="iconButton" type="image" src="img/crossIcon.png" width="20" height="20"
-               onclick="javascript:toggleView('entryDetails')" alt="Icon Cross">
-        <input type="text" id="inputCategory" name="Category" placeholder="New Category">
-        <button id="addCategory" onclick="javascript:createCategory()">New Category</button>
-        <div id="tableCategories">
-            Dieser Text wird vollständig vom Javascript überschrieben
-        </div>
 
     </div>
+
+
+</div>
+
+<!--######################### Entry Deatils Modal #################-->
+
+<div class="entryDetails modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input id="crossIconEntry" class="iconButton close" type="image" src="img/crossIcon.png" width="20"
+                       height="20" data-dismiss="modal" alt="Icon Cross">
+                <input id="deleteIcon" class="iconButton" type="image" src="img/deleteIcon.png" width="20" height="20"
+                       onclick="javascript:deleteEntry()" alt="Icon Delete">
+                <input id="editIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
+                       onclick="javascript:alert('Hier können Sie bald etwas Bearbeiten.');" alt="Icon Edit">
+                <div id="entryTitle">
+                    Dieser Text wird vollständig vom Javascript überschrieben
+                </div>
+            </div>
+
+            <div class="modal-body">
+
+                <div id="displayCategories">
+                    Dieser Text wird vollständig vom Javascript überschrieben
+                </div>
+                <input id="editCategoryIcon" class="iconButton" type="image" src="img/editIcon.png" width="20"
+                       height="20"
+                       onclick="javascript:retrieveCategories()" alt="Icon Edit">
+                <div id="entryTable">
+                    Dieser Text wird vollständig vom Javascript überschrieben
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--######################### Categories Modal #################-->
+
+<div class="newCategory modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Category</h3>
+                <input id="crossIconCategory" class="iconButton close" type="image" src="img/crossIcon.png" width="20"
+                       height="20" data-dismiss="modal" alt="Icon Cross">
+            </div>
+            <div class="modal-body">
+                <input type="text" id="inputCategory" name="Category" placeholder="New Category">
+                <button id="addCategory" onclick="javascript:createCategory()">New Category</button>
+                <div id="tableCategories">
+                    Dieser Text wird vollständig vom Javascript überschrieben
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <!--######################## Month View #################-->
