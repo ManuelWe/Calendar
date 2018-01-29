@@ -137,8 +137,8 @@ tr:nth-child(odd) {
     background-color: red;
     top: 50%;
     left: 50%;
-    margin-top: -200px;
-    margin-left: -175px;
+    margin-top: -22%;
+    margin-left: -20%;
 }
 
 #entryTable {
@@ -155,7 +155,9 @@ tr:nth-child(odd) {
 }
 
 #editCategoryIcon {
-    float: right;
+    position: absolute;
+    margin-top: 50px;
+
 }
 
 .iconButton {
@@ -182,7 +184,7 @@ tr:nth-child(odd) {
 }
 
 #displayCategories {
-    margin-top: 40px;
+    margin-top: 50px;
     position: absolute;
 }
 

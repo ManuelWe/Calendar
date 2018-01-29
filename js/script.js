@@ -1,7 +1,6 @@
 var eventArray;
 var eventlistArray;
 var selectedRow;
-var selectedCategory;
 var categorylistArray;
 
 
@@ -69,7 +68,7 @@ function retrieveEvents() {
             "</tr>"
 
     }
-    txt += "</table>"
+    txt += "</table>";
     document.getElementById("listEntry").innerHTML = txt;
 }
 
@@ -85,7 +84,7 @@ function retrieveEvent() {
 
     var txt = "<table id='eventTable'>" +
         "<tr>" + "<td>" +
-        "<img src='img/clockIcon.png' width='20' height='20'" +
+        "<img src='img/clockIcon.png' width='20' height='20'>" +
         "</td>" + "<td>" +
         eventArray.start.substr(0, 10) + " , " +
         eventArray.start.substr(11, 5)
@@ -95,27 +94,27 @@ function retrieveEvent() {
     }
     txt += "</td>" + "</tr>" +
         "<tr>" + "<td>" +
-        "<img src='img/locationIcon.png' width='20' height='20'" +
+        "<img src='img/locationIcon.png' width='20' height='20'>" +
         "</td>" + "<td>" +
         eventArray.location +
         "</td>" + "</tr>" +
         "<tr>" + "<td>" +
-        "<img src='img/organizerIcon.png' width='20' height='20'" +
+        "<img src='img/organizerIcon.png' width='20' height='20'>" +
         "</td>" + "<td>" +
         eventArray.organizer +
         "</td>" + "</tr>" +
         "<tr>" + "<td>" +
-        "<img src='img/statusIcon.png' width='20' height='20'" +
+        "<img src='img/statusIcon.png' width='20' height='20'>" +
         "</td>" + "<td>" +
         eventArray.status +
         "</td>" + "</tr>" +
         "<tr>" + "<td>" +
-        "<img src='' alt='allday' width='20' height='20'" +
+        "<img src='' alt='allday' width='20' height='20'>" +
         "</td>" + "<td>" +
         eventArray.allday +
         "</td>" + "</tr>" +
         "<tr>" + "<td>" +
-        "<img src='img/linkIcon.png' width='20' height='20'" +
+        "<img src='img/linkIcon.png' width='20' height='20'>" +
         "</td>" + "<td>" +
         "<a href='http://" + eventArray.webpage + "'>" + eventArray.webpage + "</a>" +
         "</td>" + "</tr>" +
@@ -123,11 +122,15 @@ function retrieveEvent() {
     document.getElementById("entryTitle").innerHTML = "<h3>" + eventArray.title + "</h3>";
     document.getElementById("entryTable").innerHTML = txt;
 
-    try {
-        document.getElementById("displayCategories").innerHTML = eventArray.categories[0].name;
-    }
-    catch (err) {
-        document.getElementById("displayCategories").innerHTML = "<p>No Category yet</p>";
+    if (eventArray.categories.length !== 0) {
+        var categories = "";
+        for (i = 0; i < eventArray.categories.length - 1; i++) {
+            categories += eventArray.categories[i].name + ", ";
+        }
+        categories += eventArray.categories[i].name;
+        document.getElementById("displayCategories").innerHTML = categories;
+    } else {
+        document.getElementById("displayCategories").innerHTML = "No Category yet";
     }
 
 }
@@ -252,22 +255,59 @@ function retrieveCategories() {
         "<tr><th>Categories</th></tr>"
 
     for (category in categorylistArray) {
-        tableRow = "category" + category
-        txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetCategory(" + category + ")'>" +
-            "<td>" +
+        tableRow = "category" + categorylistArray[category].id;
+        txt += "<tr id='" + tableRow + "' class='tableRows'>" +
+            "<td onclick='javascript:targetCategory(" + category + ")'>" +
             categorylistArray[category].name +
-            "</td>" +
-            "</tr>"
+            "</td><td>" +
+            "<input id='deleteClass'" + categorylistArray[category].id + "class='iconButton' type='image' src='img/deleteIcon.png' width='20' height='20'" +
+            "onclick='javascript:deleteCategory(" + category + ")' alt='Icon Delete'>" +
+            "</td></tr>"
     }
     txt += "</table>"
     document.getElementById("tableCategories").innerHTML = txt;
+
+    markCategories();
+}
+
+function markCategories() {
+    for (category in eventArray.categories) {
+        console.log(eventArray.categories[category].id);
+        document.getElementById("category" + eventArray.categories[category].id).style.backgroundColor = "#5E4485";
+    }
+
 }
 
 //handles a Click on a Category
 function targetCategory(category) {
-    selectedCategory = category;
-    addCategory();
-    toggleView("entryDetails");
+    if (document.getElementById("category" + categorylistArray[category].id).style.backgroundColor == "rgb(94, 68, 133)") {
+        removeCategory(category);
+        document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "white";
+    }
+    else {
+        addCategory(category);
+        document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#5E4485";
+    }
+    setTimeout(retrieveEvent, 100);
+}
+
+function removeCategory(selectedCategory){
+    var xhr = new XMLHttpRequest();
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories/" + categorylistArray[selectedCategory].id +
+        "/" + eventlistArray[selectedRow].id;
+    xhr.open("DELETE", url, true);
+    xhr.send();
+
+}
+
+function deleteCategory(selectedCategory){
+    var xhr = new XMLHttpRequest();
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories/" + categorylistArray[selectedCategory].id;
+    xhr.open("DELETE", url, true);
+    xhr.send();
+
+    setTimeout(retrieveEvent, 100);
+    setTimeout(retrieveCategories, 100);
 }
 
 //creates a new Category
@@ -291,9 +331,8 @@ function createCategory() {
 }
 
 //adds a Category to a Event
-function addCategory() {
+function addCategory(selectedCategory) {
     var xhr = new XMLHttpRequest();
-    console.log(selectedCategory);
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories/" + categorylistArray[selectedCategory].id +
         "/" + eventlistArray[selectedRow].id;
     xhr.open("POST", url, true);
