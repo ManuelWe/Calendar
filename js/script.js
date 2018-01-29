@@ -6,12 +6,24 @@ var categorylistArray;
 
 
 function init() {
-
+    retrieveCategories();
+    categories();
     retrieveEvents();
 }
 
 //######################## Entries #######################
+function categories(){
 
+    var txt="<label for='category'>Category</label>" +
+        "<input class='form-control' list='listCategory' id='category'>" +
+        "<datalist id='listCategory'>";
+    for(category in categorylistArray) {
+        console.log("Here I am: " + category);
+        txt = txt + "<option value='"+categorylistArray[category].name+"'>";
+    }
+    txt = txt + "</datalist>";
+    document.getElementById("list1").innerHTML = txt;
+}
 //Retrieves every Event from the Server and displays them in a list
 function retrieveEvents() {
 
@@ -124,12 +136,30 @@ function createEntry() {
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
+    xhr.onreadystatechange = retrieveEvents;
     xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.setRequestHeader("Content-type", "json");
+    console.log(document.getElementById('title').value);
+    console.log(document.getElementById('location').value);
+    console.log(document.getElementById('organizer').value);
+    console.log(document.getElementById('start').value);
+    console.log(document.getElementById('end').value);
+    console.log(document.getElementById('status').value);
+    console.log(document.getElementById('allDay').checked);
+    console.log(document.getElementById('webpage').value);
+    console.log("hi");
 
-    var data = JSON.stringify(
-        {
-            "id": 1,
+    var data={};
+    data.title=document.getElementById('title').value;
+    data.location=document.getElementById('location').value;
+    data.organizer=document.getElementById('organizer').value;
+    data.start=document.getElementById('start').value;
+    data.end=document.getElementById('end').value;
+    data.status=document.getElementById('status').value;
+    data.allday=document.getElementById('allDay').checked;
+    data.webpage=document.getElementById('webpage').value;
+
+            /*"id": 1456,
             "title": "Toller Termin",
             "location": null,
             "organizer": "test@dsad.com",
@@ -137,12 +167,15 @@ function createEntry() {
             "end": "2017-12-11T11:15",
             "status": "Busy",
             "allday": false,
-            "webpage": "google.com"
-        }
-    );
+            "webpage": "google.com"*/
+    console.log(data);
+    xhr.send(JSON.stringify(data));
+    xhr.onload = function () {
+        retrieveEvents();
+        toggleView("listView");
+    };
+    //setTimeout(retrieveEvents(), 100);
 
-    xhr.send(data);
-    setTimeout(retrieveEvents, 100);
 }
 
 // deletes an entry and updates the list
@@ -213,9 +246,7 @@ function retrieveCategories() {
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories";
     xhr.open("GET", url, false);
     xhr.send();
-
     categorylistArray = JSON.parse(xhr.responseText);
-
 
     txt = "<table>" +
         "<tr><th>Categories</th></tr>"
