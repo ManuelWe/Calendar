@@ -5,7 +5,7 @@ var categorylistArray;
 
 
 function init() {
-    retrieveCategories();
+    //retrieveCategories();
     categories();
     retrieveEvents();
 }
@@ -23,6 +23,7 @@ function categories(){
     txt = txt + "</datalist>";
     document.getElementById("list1").innerHTML = txt;
 }
+
 //Retrieves every Event from the Server and displays them in a list
 function retrieveEvents() {
 
