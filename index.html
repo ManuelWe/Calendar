@@ -42,7 +42,7 @@
             <ul class="nav navbar-nav navbar right">
                 <li class="active"><a href="javascript:toggleView('listView')">Home</a></li>
                 <li><a href="javascript:toggleView('createEntry')">Termin erstellen</a></li>
-                <li><a href="javascript:createEntry()">Test erstellen</a></li>
+                <li><a href="javascript:createTestEntry()">Test erstellen</a></li>
                 <li><a href="javascript:toggleView('monthView')">Month View</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>
@@ -84,7 +84,7 @@
                 <input id="deleteIcon" class="iconButton" type="image" src="img/deleteIcon.png" width="20" height="20"
                        onclick="javascript:deleteEntry()" alt="Icon Delete">
                 <input id="editIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
-                       onclick="javascript:alert('Hier können Sie bald etwas Bearbeiten.');" alt="Icon Edit">
+                       onclick="javascript:editEvent();" alt="Icon Edit">
                 <div id="entryTitle">
                     Dieser Text wird vollständig vom Javascript überschrieben
                 </div>
@@ -177,19 +177,14 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-11">
                 <label for="image">Image</label>
                 <input type="file" class="form-control-file" id="image">
             </div>
-            <div class="form-group col-md-4">
-                <input class="form-check-input" type="checkbox" id="allDay">
-                <label class="form-check-label" for="allDay">All day</label>
-            </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-1">
                 <button onclick="createEntry();" class="btn btn-primary">Confirm</button>
             </div>
         </div>
-
 </div>
 
 </body>

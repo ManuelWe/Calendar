@@ -5,23 +5,45 @@ var categorylistArray;
 
 
 function init() {
-    //retrieveCategories();
-    categories();
+    retrieveCategories("initCall");
+    categories("");
     retrieveEvents();
 }
 
-//######################## Entries #######################
-function categories(){
 
-    var txt="<label for='category'>Category</label>" +
-        "<input class='form-control' list='listCategory' id='category'>" +
+//######################## Entries #######################
+//creates an input field with a datalist from the Categories
+function categories(inputValue) {
+    var txt = "<label for='category'>Category</label>" +
+        "<input class='form-control' list='listCategory' id='category' value='" +
+        inputValue +
+        "'>" +
         "<datalist id='listCategory'>";
-    for(category in categorylistArray) {
-        console.log("Here I am: " + category);
-        txt = txt + "<option value='"+categorylistArray[category].name+"'>";
+    for (category in categorylistArray) {
+        txt = txt +
+            "<option value='" +
+            categorylistArray[category].name +
+            "'>";
     }
     txt = txt + "</datalist>";
     document.getElementById("list1").innerHTML = txt;
+}
+
+
+//Fills the selected event into the createEntry div
+function editEvent() {
+    document.getElementById('title').value = 'Test';
+    document.getElementById('organizer').value = 'Test@web.de';
+    document.getElementById('start').value = "2017-12-11T11:11";
+    document.getElementById('end').value = "2017-12-11T11:15";
+    document.getElementById('location').value = 'Test';
+    categories("Test");
+    document.getElementById('status').value = 'Free';
+    document.getElementById('webpage').value = 'test.de';
+    //document.getElementById('image').value = '';
+    toggleView("createEntry");
+
+
 }
 
 //Retrieves every Event from the Server and displays them in a list
@@ -143,7 +165,7 @@ function createEntry() {
     xhr.onreadystatechange = retrieveEvents;
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "json");
-    console.log(document.getElementById('title').value);
+    /*console.log(document.getElementById('title').value);
     console.log(document.getElementById('location').value);
     console.log(document.getElementById('organizer').value);
     console.log(document.getElementById('start').value);
@@ -151,19 +173,45 @@ function createEntry() {
     console.log(document.getElementById('status').value);
     console.log(document.getElementById('allDay').checked);
     console.log(document.getElementById('webpage').value);
-    console.log("hi");
+    console.log("hi");*/
 
-    var data={};
-    data.title=document.getElementById('title').value;
-    data.location=document.getElementById('location').value;
-    data.organizer=document.getElementById('organizer').value;
-    data.start=document.getElementById('start').value;
-    data.end=document.getElementById('end').value;
-    data.status=document.getElementById('status').value;
-    data.allday=document.getElementById('allDay').checked;
-    data.webpage=document.getElementById('webpage').value;
+    var data = {};
+    data.title = document.getElementById('title').value;
+    data.location = document.getElementById('location').value;
+    data.organizer = document.getElementById('organizer').value;
+    data.start = document.getElementById('start').value;
+    data.end = document.getElementById('end').value;
+    data.status = document.getElementById('status').value;
+    data.allday = false;
+    data.webpage = document.getElementById('webpage').value;
 
-            /*"id": 1456,
+    /*"id": 1456,
+    "title": "Toller Termin",
+    "location": null,
+    "organizer": "test@dsad.com",
+    "start": "2017-12-11T11:11",
+    "end": "2017-12-11T11:15",
+    "status": "Busy",
+    "allday": false,
+    "webpage": "google.com"*/
+    console.log(data);
+    xhr.onload = function () {
+        retrieveEvents();
+        toggleView("listView");
+    };
+    xhr.send(JSON.stringify(data));
+}
+
+//creates a standard entry for testing
+function createTestEntry() {
+    var xhr = new XMLHttpRequest();
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+
+    var data = JSON.stringify(
+        {
+            "id": 1,
             "title": "Toller Termin",
             "location": null,
             "organizer": "test@dsad.com",
@@ -171,14 +219,15 @@ function createEntry() {
             "end": "2017-12-11T11:15",
             "status": "Busy",
             "allday": false,
-            "webpage": "google.com"*/
-    console.log(data);
-    xhr.send(JSON.stringify(data));
+            "webpage": "google.com"
+        }
+    );
+
     xhr.onload = function () {
         retrieveEvents();
         toggleView("listView");
     };
-    //setTimeout(retrieveEvents(), 100);
+    xhr.send(data);
 
 }
 
@@ -187,9 +236,11 @@ function deleteEntry() {
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
     xhr.open("DELETE", url, true);
+    xhr.onload = function () {
+        retrieveEvents();
+    };
     xhr.send();
 
-    setTimeout(retrieveEvents, 100);
 
     $(".entryDetails").modal("hide");
 
@@ -245,18 +296,17 @@ function updateList(count) {
 //########################## Categories ##################
 
 //retrieves all Categories and displays them in a list
-function retrieveCategories() {
-
-    $(".newCategory").modal();
+function retrieveCategories(initCall) {
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories";
     xhr.open("GET", url, false);
     xhr.send();
+
     categorylistArray = JSON.parse(xhr.responseText);
 
     txt = "<table>" +
-        "<tr><th>Categories</th></tr>"
+        "<tr><th>Categories</th></tr>";
 
     for (category in categorylistArray) {
         tableRow = "category" + categorylistArray[category].id;
@@ -268,10 +318,13 @@ function retrieveCategories() {
             "onclick='javascript:deleteCategory(" + category + ")' alt='Icon Delete'>" +
             "</td></tr>"
     }
-    txt += "</table>"
+    txt += "</table>";
     document.getElementById("tableCategories").innerHTML = txt;
 
-    markCategories();
+    if(initCall != "initCall") {              //soll beim init Call nicht ausgeführt werden
+        $(".newCategory").modal();
+        markCategories();
+    }
 }
 
 function markCategories() {
@@ -291,7 +344,6 @@ function targetCategory(category) {
         addCategory(category);
         document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#5E4485";
     }
-    setTimeout(retrieveEvent, 100);
 }
 
 function removeCategory(selectedCategory) {
@@ -299,6 +351,9 @@ function removeCategory(selectedCategory) {
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories/" + categorylistArray[selectedCategory].id +
         "/" + eventlistArray[selectedRow].id;
     xhr.open("DELETE", url, true);
+    xhr.onload = function () {
+        retrieveEvent();
+    };
     xhr.send();
 
 }
@@ -307,10 +362,11 @@ function deleteCategory(selectedCategory) {
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories/" + categorylistArray[selectedCategory].id;
     xhr.open("DELETE", url, true);
+    xhr.onload = function () {
+        retrieveEvent();
+        retrieveCategories();
+    };
     xhr.send();
-
-    setTimeout(retrieveEvent, 100);
-    setTimeout(retrieveCategories, 100);
 }
 
 //creates a new Category
@@ -328,9 +384,11 @@ function createCategory() {
         }
     );
 
+    xhr.onload = function () {
+        retrieveCategories();
+    };
     xhr.send(data);
 
-    setTimeout(retrieveCategories, 100);
 }
 
 //adds a Category to a Event
@@ -347,6 +405,9 @@ function addCategory(selectedCategory) {
         }
     );
 
+    xhr.onload = function () {
+        retrieveEvent();
+    };
     xhr.send(data);
 }
 
