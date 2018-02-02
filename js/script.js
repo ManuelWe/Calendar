@@ -5,23 +5,40 @@ var categorylistArray;
 
 
 function init() {
-    retrieveCategories();
-    categories();
+    //retrieveCategories();
+    categories("");
     retrieveEvents();
 }
 
 //######################## Entries #######################
-function categories(){
-
+function categories(inputValue){
     var txt="<label for='category'>Category</label>" +
-        "<input class='form-control' list='listCategory' id='category'>" +
+        "<input class='form-control' list='listCategory' id='category' value='"+
+        inputValue+
+        "'>" +
         "<datalist id='listCategory'>";
     for(category in categorylistArray) {
-        console.log("Here I am: " + category);
-        txt = txt + "<option value='"+categorylistArray[category].name+"'>";
+        txt = txt +
+            "<option value='" +
+            categorylistArray[category].name +
+            "'>";
     }
     txt = txt + "</datalist>";
     document.getElementById("list1").innerHTML = txt;
+}
+function editEvent(){
+    document.getElementById('title').value = 'Test';
+    document.getElementById('organizer').value = 'Test@web.de';
+    document.getElementById('start').value = "2017-12-11T11:11";
+    document.getElementById('end').value = "2017-12-11T11:15";
+    document.getElementById('location').value = 'Test';
+    categories("Test");
+    document.getElementById('status').value = 'Free';
+    document.getElementById('webpage').value = 'test.de';
+    //document.getElementById('image').value = '';
+    toggleView("createEntry");
+
+
 }
 //Retrieves every Event from the Server and displays them in a list
 function retrieveEvents() {
@@ -142,7 +159,7 @@ function createEntry() {
     xhr.onreadystatechange = retrieveEvents;
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "json");
-    console.log(document.getElementById('title').value);
+    /*console.log(document.getElementById('title').value);
     console.log(document.getElementById('location').value);
     console.log(document.getElementById('organizer').value);
     console.log(document.getElementById('start').value);
@@ -150,7 +167,7 @@ function createEntry() {
     console.log(document.getElementById('status').value);
     console.log(document.getElementById('allDay').checked);
     console.log(document.getElementById('webpage').value);
-    console.log("hi");
+    console.log("hi");*/
 
     var data={};
     data.title=document.getElementById('title').value;
@@ -159,7 +176,7 @@ function createEntry() {
     data.start=document.getElementById('start').value;
     data.end=document.getElementById('end').value;
     data.status=document.getElementById('status').value;
-    data.allday=document.getElementById('allDay').checked;
+    data.allday=false;
     data.webpage=document.getElementById('webpage').value;
 
             /*"id": 1456,
