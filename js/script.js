@@ -11,6 +11,7 @@ function init() {
 }
 
 //######################## Entries #######################
+//creates an input field with a datalist from the Categories
 function categories(inputValue){
     var txt="<label for='category'>Category</label>" +
         "<input class='form-control' list='listCategory' id='category' value='"+
@@ -26,6 +27,7 @@ function categories(inputValue){
     txt = txt + "</datalist>";
     document.getElementById("list1").innerHTML = txt;
 }
+//Fills the selected event into the createEntry div
 function editEvent(){
     document.getElementById('title').value = 'Test';
     document.getElementById('organizer').value = 'Test@web.de';
