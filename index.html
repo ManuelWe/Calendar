@@ -78,7 +78,7 @@
 <div class="entryDetails modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div id="detailsHeader" class="modal-header">
                 <input id="crossIconEntry" class="iconButton close" type="image" src="img/crossIcon.png" width="20"
                        height="20" data-dismiss="modal" alt="Icon Cross">
                 <input id="deleteIcon" class="iconButton" type="image" src="img/deleteIcon.png" width="20" height="20"
@@ -178,8 +178,11 @@
         </div>
         <div class="form-row">
             <div class="form-group col-md-11">
-                <label for="image">Image</label>
-                <input type="file" class="form-control-file" id="image">
+                <form action="javascript:loadImage()">
+                    <label for="uploadImage">Image</label>
+                    <input type="file" class="form-control-file" id="uploadImage">
+                    <img id="imagePreview" src="img/w3newbie.png" height="200" width="200">
+                </form>
             </div>
             <div class="form-group col-md-1">
                 <button onclick="createEntry();" class="btn btn-primary">Confirm</button>

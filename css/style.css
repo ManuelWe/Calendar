@@ -162,6 +162,13 @@ tr:nth-child(odd) {
     box-shadow: 0px 8px 16px 0px rgba(50,100,0,0.2);
 }
 
+#detailsHeader{
+    height: 250px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size:cover;
+}
+
 /*################## Category Container ##############*/
 .newCategory {
 

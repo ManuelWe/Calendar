@@ -2,12 +2,14 @@ var eventArray;
 var eventlistArray;
 var selectedRow;
 var categorylistArray;
+var image;
 
 
 function init() {
     retrieveCategories("initCall");
     categories("");
     retrieveEvents();
+    document.getElementById('uploadImage').addEventListener('change', loadImage, false);
 }
 
 
@@ -144,6 +146,7 @@ function retrieveEvent() {
         "</table>"
     document.getElementById("entryTitle").innerHTML = "<h3 class='modal-title'>" + eventArray.title + "</h3>";
     document.getElementById("entryTable").innerHTML = txt;
+    document.getElementById("detailsHeader").style.backgroundImage = 'url(' + eventArray.imageurl + ')';
 
     if (eventArray.categories.length !== 0) {
         var categories = "";
@@ -162,7 +165,7 @@ function createEntry() {
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
-    xhr.onreadystatechange = retrieveEvents;
+    //xhr.onreadystatechange = retrieveEvents;
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "json");
     /*console.log(document.getElementById('title').value);
@@ -197,9 +200,13 @@ function createEntry() {
     console.log(data);
     xhr.onload = function () {
         retrieveEvents();
+        selectedRow = eventlistArray[eventlistArray.length-1].id;
+        addImage();
         toggleView("listView");
     };
     xhr.send(JSON.stringify(data));
+
+
 }
 
 //creates a standard entry for testing
@@ -321,7 +328,7 @@ function retrieveCategories(initCall) {
     txt += "</table>";
     document.getElementById("tableCategories").innerHTML = txt;
 
-    if(initCall != "initCall") {              //soll beim init Call nicht ausgeführt werden
+    if (initCall != "initCall") {              //soll beim init Call nicht ausgeführt werden
         $(".newCategory").modal();
         markCategories();
     }
@@ -411,6 +418,31 @@ function addCategory(selectedCategory) {
     xhr.send(data);
 }
 
+//####################### Images ####################
+
+function loadImage() {
+    if (this.files[0].size > 500000) {
+        window.alert("Please select a picture smaller than 500kB!")
+    }
+    else {
+        var reader = new FileReader();
+        reader.readAsDataURL(this.files[0]);
+        reader.onload = function () {
+            document.getElementById("imagePreview").src = reader.result;
+            image = reader.result;
+        }
+    }
+}
+
+function addImage() {
+    var xhr = new XMLHttpRequest();
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + selectedRow;
+    xhr.open("POST", url, true);
+    data = {"imagedata": image};
+    xhr.send(JSON.stringify(data));
+
+}
+
 //####################### View ########################
 
 //handles a click on a row in the list view
@@ -424,6 +456,8 @@ function targetRow(row) {
 
 //handles which container is displayed
 function toggleView(show) {
+    $(".entryDetails").modal("hide");
+    $(".newCategory").modal("hide");
 
     document.getElementsByClassName("listView")[0].style.zIndex = "1";
     document.getElementsByClassName("monthView")[0].style.zIndex = "1";
