@@ -29,14 +29,22 @@ function categories(inputValue){
 }
 //Fills the selected event into the createEntry div
 function editEvent(){
-    document.getElementById('title').value = 'Test';
-    document.getElementById('organizer').value = 'Test@web.de';
-    document.getElementById('start').value = "2017-12-11T11:11";
-    document.getElementById('end').value = "2017-12-11T11:15";
-    document.getElementById('location').value = 'Test';
+
+    var xhr = new XMLHttpRequest();
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
+    xhr.open("GET", url, false);
+    xhr.send();
+
+    eventArray = JSON.parse(xhr.responseText);
+
+    document.getElementById('title').value = eventArray.title;
+    document.getElementById('organizer').value = eventArray.organizer;
+    document.getElementById('start').value = eventArray.start;
+    document.getElementById('end').value = eventArray.end;
+    document.getElementById('location').value = eventArray.location;
     categories("Test");
-    document.getElementById('status').value = 'Free';
-    document.getElementById('webpage').value = 'test.de';
+    document.getElementById('status').value = eventArray.status;
+    document.getElementById('webpage').value = eventArray.webpage;
     //document.getElementById('image').value = '';
     toggleView("createEntry");
 
