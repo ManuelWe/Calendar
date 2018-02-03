@@ -165,7 +165,6 @@ function createEntry() {
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
-    //xhr.onreadystatechange = retrieveEvents;
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "json");
     /*console.log(document.getElementById('title').value);
