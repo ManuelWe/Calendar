@@ -34,7 +34,7 @@ function categories(inputValue) {
 
 //Fills the selected event into the createEntry div
 function editEvent(){
-
+    console.log("Hier");
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
     xhr.open("GET", url, false);
@@ -50,7 +50,7 @@ function editEvent(){
     categories("Test");
     document.getElementById('status').value = eventArray.status;
     document.getElementById('webpage').value = eventArray.webpage;
-    document.getElementById('image').value = eventArray.image;
+    //document.getElementById('image').value = eventArray.imageurl;
     toggleView("createEntry");
 
 
