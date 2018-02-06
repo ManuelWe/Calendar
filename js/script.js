@@ -9,7 +9,10 @@ function init() {
     retrieveCategories("initCall");
     categories("");
     retrieveEvents();
-    document.getElementById('uploadImage').addEventListener('change', loadImage, false);
+
+    input = document.getElementById("uploadImage");
+    input.style.opacity = 0;
+    input.addEventListener('change', updateImageDisplay);
 }
 
 
@@ -33,7 +36,7 @@ function categories(inputValue) {
 
 
 //Fills the selected event into the createEntry div
-function editEvent(){
+function editEvent() {
     console.log("Hier");
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
@@ -50,11 +53,33 @@ function editEvent(){
     categories("Test");
     document.getElementById('status').value = eventArray.status;
     document.getElementById('webpage').value = eventArray.webpage;
-    //document.getElementById('image').value = eventArray.imageurl;
+    if (eventArray.imageurl) {
+
+        /*console.log(eventArray.imageurl);
+        var myCanvas = document.createElement("canvas");
+        var ctx = myCanvas.getContext('2d');
+        var img = new Image();
+        img.setAttribute('crossOrigin', 'anonymous');
+        img.src = eventArray.imageurl + '?' + new Date().getTime();
+        myCanvas.width = img.width;
+        myCanvas.height = img.height;
+        console.log(img);
+        ctx.drawImage(img, 0, 0);
+
+        image = myCanvas.toDataURL('image/jpeg');
+        console.log(image);
+
+
+        document.getElementById("imagePreview").style.backgroundImage = "url(" + eventArray.imageurl + ")";*/
+        document.getElementById("detailsHeader").style.backgroundImage = "none";
+
+    }
     toggleView("createEntry");
 
 
 }
+
+
 //Retrieves every Event from the Server and displays them in a list
 function retrieveEvents() {
 
@@ -153,7 +178,11 @@ function retrieveEvent() {
         "</table>"
     document.getElementById("entryTitle").innerHTML = "<h3 class='modal-title'>" + eventArray.title + "</h3>";
     document.getElementById("entryTable").innerHTML = txt;
-    document.getElementById("detailsHeader").style.backgroundImage = 'url(' + eventArray.imageurl + ')';
+    if (eventArray.imageurl) {
+        document.getElementById("detailsHeader").style.backgroundImage = 'url(' + eventArray.imageurl + ')';
+    } else {
+        document.getElementById("detailsHeader").style.backgroundImage = "none";
+    }
 
     if (eventArray.categories.length !== 0) {
         var categories = "";
@@ -193,6 +222,12 @@ function createEntry() {
     data.status = document.getElementById('status').value;
     data.allday = false;
     data.webpage = document.getElementById('webpage').value;
+    if (document.getElementById("imagePreview").style.backgroundImage === "url(img/w3newbie.png)") {
+        console.log(document.getElementById("imagePreview").style.backgroundImage);
+    } else {
+        data.imagedata = image;
+    }
+
 
     /*"id": 1456,
     "title": "Toller Termin",
@@ -206,8 +241,7 @@ function createEntry() {
     console.log(data);
     xhr.onload = function () {
         retrieveEvents();
-        selectedRow = eventlistArray[eventlistArray.length-1].id;
-        addImage();
+        selectedRow = eventlistArray[eventlistArray.length - 1].id;
         toggleView("listView");
     };
     xhr.send(JSON.stringify(data));
@@ -424,20 +458,80 @@ function addCategory(selectedCategory) {
 }
 
 //####################### Images ####################
-
-function loadImage() {
-    if (this.files[0].size > 500000) {
-        window.alert("Please select a picture smaller than 500kB!")
+function updateImageDisplay() {
+    var preview = document.querySelector('.preview');
+    while (preview.firstChild) {
+        preview.removeChild(preview.firstChild);
     }
-    else {
-        var reader = new FileReader();
-        reader.readAsDataURL(this.files[0]);
-        reader.onload = function () {
-            document.getElementById("imagePreview").src = reader.result;
-            image = reader.result;
+
+    var curFiles = document.getElementById("uploadImage").files;
+    if (curFiles.length === 0) {
+        var para = document.createElement('p');
+        para.textContent = 'No files currently selected for upload';
+        preview.appendChild(para);
+    } else {
+
+        var list = document.createElement('ol');
+        preview.appendChild(list);
+        for (var i = 0; i < curFiles.length; i++) {
+            var listItem = document.createElement('li');
+            var para = document.createElement('p');
+            if (validFileType(curFiles[i]) && returnFileSize(curFiles[i].size) != 'Zu Groß') {
+                var reader = new FileReader();
+                reader.readAsDataURL(this.files[0]);
+                reader.onload = function () {
+                    document.getElementById("imagePreview").style.backgroundImage = "url(" + reader.result + ")";
+                    image = reader.result;
+                }
+
+                para.textContent = 'File name ' + curFiles[i].name + ', file size ' + returnFileSize(curFiles[i].size) + '.';
+                listItem.appendChild(para);
+                list.appendChild(listItem);
+
+            } else if (validFileType(curFiles[i]) === false) {
+                para.textContent = 'File name ' + curFiles[i].name + ': Not a valid file type. Update your selection.';
+                listItem.appendChild(para);
+                list.appendChild(listItem);
+                document.getElementById("imagePreview").style.backgroundImage = "url(img/w3newbie.png)";
+                window.alert("Please select an JPEG or PNG File format!");
+            } else {
+                para.textContent = 'File name ' + curFiles[i].name + ': Image too large. Update your selection.';
+                listItem.appendChild(para);
+                list.appendChild(listItem);
+                document.getElementById("imagePreview").style.backgroundImage = "url(img/w3newbie.png)";
+                window.alert("Please select a picture smaller than 500kB!");
+            }
+
+
         }
     }
 }
+
+
+function validFileType(file) {
+    var fileTypes = [
+        'image/jpeg',
+        'image/png'
+    ]
+    for (var i = 0; i < fileTypes.length; i++) {
+        if (file.type === fileTypes[i]) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function returnFileSize(number) {
+    if (number < 1024) {
+        return number + 'bytes';
+    } else if (number > 1024 && number < 500000) {
+        return (number / 1024).toFixed(1) + 'KB';
+    } else if (number > 500000) {
+        return 'Zu Groß';
+    }
+}
+
 
 function addImage() {
     var xhr = new XMLHttpRequest();
@@ -446,6 +540,18 @@ function addImage() {
     data = {"imagedata": image};
     xhr.send(JSON.stringify(data));
 
+}
+
+function deleteImage() {
+    image = null;
+    document.getElementById("imagePreview").style.backgroundImage = "url(img/w3newbie.png)";
+}
+
+function deleteImageFromServer() {
+    var xhr = new XMLHttpRequest();
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + selectedRow;
+    xhr.open("DELETE", url, true);
+    xhr.send();
 }
 
 //####################### View ########################
@@ -475,5 +581,11 @@ function toggleView(show) {
 function test() {
 
 }
+
+
+
+
+
+
 
 

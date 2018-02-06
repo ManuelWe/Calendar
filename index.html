@@ -178,10 +178,18 @@
         </div>
         <div class="form-row">
             <div class="form-group col-md-11">
-                <form action="javascript:loadImage()">
-                    <label for="uploadImage">Image</label>
-                    <input type="file" class="form-control-file" id="uploadImage">
-                    <img id="imagePreview" src="img/w3newbie.png" height="200" width="200">
+                <form id="imageForm">
+                    <label for="uploadImage">Select Image (PNG or JPEG)</label>
+                    <input type="file" class="form-control-file" id="uploadImage" accept=".jpeg, .png">
+                    <div class="preview">
+                        <p>No files currently selected for upload</p>
+                    </div>
+                    <div class="imageContainer" onclick="deleteImage()">
+                        <div id="imagePreview"></div>
+                        <div class="fadeinContainer">
+                            <img id="deleteImage" src="img/deleteIcon.png" width="50" height="50" alt="Icon Delete">
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="form-group col-md-1">
