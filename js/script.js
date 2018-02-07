@@ -54,24 +54,7 @@ function editEvent() {
     document.getElementById('status').value = eventArray.status;
     document.getElementById('webpage').value = eventArray.webpage;
     if (eventArray.imageurl) {
-
-        /*console.log(eventArray.imageurl);
-        var myCanvas = document.createElement("canvas");
-        var ctx = myCanvas.getContext('2d');
-        var img = new Image();
-        img.setAttribute('crossOrigin', 'anonymous');
-        img.src = eventArray.imageurl + '?' + new Date().getTime();
-        myCanvas.width = img.width;
-        myCanvas.height = img.height;
-        console.log(img);
-        ctx.drawImage(img, 0, 0);
-
-        image = myCanvas.toDataURL('image/jpeg');
-        console.log(image);
-
-
-        document.getElementById("imagePreview").style.backgroundImage = "url(" + eventArray.imageurl + ")";*/
-        document.getElementById("detailsHeader").style.backgroundImage = "none";
+        document.getElementById("imagePreview").style.backgroundImage = "url(" + eventArray.imageurl + ")";
 
     }
     toggleView("createEntry");
@@ -92,15 +75,15 @@ function retrieveEvents() {
 
     var txt = "<table class='calenderList'>" +
         "<tr>" +
-        "<th>Eventname" +
+        "<th>Event name" +
         "</th>" +
-        "<th>Startdate" +
+        "<th>Start date" +
         "</th>" +
-        "<th>Starttime" +
+        "<th>Start time" +
         "</th>" +
-        "<th>Endtime" +
+        "<th>End time" +
         "</th>" +
-        "<th>Enddate" +
+        "<th>End date" +
         "</th>" +
         "</tr>"
 
@@ -223,7 +206,7 @@ function createEntry() {
     data.allday = false;
     data.webpage = document.getElementById('webpage').value;
     if (document.getElementById("imagePreview").style.backgroundImage === "url(img/w3newbie.png)") {
-        console.log(document.getElementById("imagePreview").style.backgroundImage);
+
     } else {
         data.imagedata = image;
     }
@@ -248,6 +231,42 @@ function createEntry() {
 
 
 }
+
+function updateEntry() {
+
+    var xhr = new XMLHttpRequest();
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
+    xhr.open("PUT", url, true);
+    xhr.setRequestHeader("Content-type", "json");
+
+    var data = {};
+    data.title = document.getElementById('title').value;
+    data.location = document.getElementById('location').value;
+    data.organizer = document.getElementById('organizer').value;
+    data.start = document.getElementById('start').value;
+    data.end = document.getElementById('end').value;
+    data.status = document.getElementById('status').value;
+    data.allday = false;
+    data.webpage = document.getElementById('webpage').value;
+    console.log(document.getElementById("imagePreview").style.backgroundImage);
+    if (document.getElementById("imagePreview").style.backgroundImage == 'url("img/w3newbie.png")') {
+        deleteImageFromServer();
+    } else {
+        console.log("hi");
+        data.imagedata = image;
+    }
+
+
+    xhr.onload = function () {
+        retrieveEvents();
+        selectedRow = eventlistArray[eventlistArray.length - 1].id;
+        toggleView("listView");
+    };
+    xhr.send(JSON.stringify(data));
+
+
+}
+
 
 //creates a standard entry for testing
 function createTestEntry() {
@@ -301,15 +320,15 @@ function updateList(count) {
 
     var txt = "<table class='calenderList'>" +
         "<tr>" +
-        "<th>Eventname" +
+        "<th>Event name" +
         "</th>" +
-        "<th>Startdate" +
+        "<th>Start date" +
         "</th>" +
-        "<th>Starttime" +
+        "<th>Start time" +
         "</th>" +
-        "<th>Endtime" +
+        "<th>End time" +
         "</th>" +
-        "<th>Enddate" +
+        "<th>End date" +
         "</th>" +
         "</tr>"
 
@@ -535,7 +554,7 @@ function returnFileSize(number) {
 
 function addImage() {
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + selectedRow;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + eventlistArray[selectedRow].id;
     xhr.open("POST", url, true);
     data = {"imagedata": image};
     xhr.send(JSON.stringify(data));
@@ -549,7 +568,7 @@ function deleteImage() {
 
 function deleteImageFromServer() {
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + selectedRow;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + eventlistArray[selectedRow].id;
     xhr.open("DELETE", url, true);
     xhr.send();
 }
