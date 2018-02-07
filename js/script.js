@@ -1,6 +1,6 @@
 var eventArray;
 var eventlistArray;
-var selectedRow;
+var selectedRowId;
 var categorylistArray;
 var image;
 
@@ -39,7 +39,7 @@ function categories(inputValue) {
 function editEvent() {
     console.log("Hier");
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
     xhr.open("GET", url, false);
     xhr.send();
 
@@ -72,6 +72,7 @@ function retrieveEvents() {
     xhr.send();
 
     eventlistArray = JSON.parse(xhr.responseText);
+    sortArray("date ASC");
 
     var txt = "<table class='calenderList'>" +
         "<tr>" +
@@ -116,7 +117,7 @@ function retrieveEvents() {
 function retrieveEvent() {
 
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
     xhr.open("GET", url, false);
     xhr.send();
 
@@ -224,7 +225,7 @@ function createEntry() {
     console.log(data);
     xhr.onload = function () {
         retrieveEvents();
-        selectedRow = eventlistArray[eventlistArray.length - 1].id;
+        //selectedRow = eventlistArray[eventlistArray.length - 1].id;
         toggleView("listView");
     };
     xhr.send(JSON.stringify(data));
@@ -235,7 +236,7 @@ function createEntry() {
 function updateEntry() {
 
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
     xhr.open("PUT", url, true);
     xhr.setRequestHeader("Content-type", "json");
 
@@ -248,18 +249,16 @@ function updateEntry() {
     data.status = document.getElementById('status').value;
     data.allday = false;
     data.webpage = document.getElementById('webpage').value;
-    console.log(document.getElementById("imagePreview").style.backgroundImage);
     if (document.getElementById("imagePreview").style.backgroundImage == 'url("img/w3newbie.png")') {
         deleteImageFromServer();
     } else {
-        console.log("hi");
         data.imagedata = image;
     }
 
 
     xhr.onload = function () {
         retrieveEvents();
-        selectedRow = eventlistArray[eventlistArray.length - 1].id;
+        //selectedRow = eventlistArray[eventlistArray.length - 1].id;
         toggleView("listView");
     };
     xhr.send(JSON.stringify(data));
@@ -300,7 +299,7 @@ function createTestEntry() {
 // deletes an entry and updates the list
 function deleteEntry() {
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + eventlistArray[selectedRow].id;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
     xhr.open("DELETE", url, true);
     xhr.onload = function () {
         retrieveEvents();
@@ -334,7 +333,7 @@ function updateList(count) {
 
     for (i = 0; i < count; i++) {
         tableRow = "tableRow" + i;
-        txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + event + ")'>" +
+        txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + i + ")'>" +
             "<td>" +
             eventlistArray[i].title +
             "</td>" +
@@ -414,7 +413,7 @@ function targetCategory(category) {
 function removeCategory(selectedCategory) {
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories/" + categorylistArray[selectedCategory].id +
-        "/" + eventlistArray[selectedRow].id;
+        "/" + selectedRowId;
     xhr.open("DELETE", url, true);
     xhr.onload = function () {
         retrieveEvent();
@@ -460,7 +459,7 @@ function createCategory() {
 function addCategory(selectedCategory) {
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories/" + categorylistArray[selectedCategory].id +
-        "/" + eventlistArray[selectedRow].id;
+        "/" + selectedRowId;
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "application/json");
 
@@ -554,7 +553,7 @@ function returnFileSize(number) {
 
 function addImage() {
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + eventlistArray[selectedRow].id;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + selectedRowId;
     xhr.open("POST", url, true);
     data = {"imagedata": image};
     xhr.send(JSON.stringify(data));
@@ -568,7 +567,7 @@ function deleteImage() {
 
 function deleteImageFromServer() {
     var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + eventlistArray[selectedRow].id;
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + selectedRowId;
     xhr.open("DELETE", url, true);
     xhr.send();
 }
@@ -578,7 +577,7 @@ function deleteImageFromServer() {
 //handles a click on a row in the list view
 function targetRow(row) {
 
-    selectedRow = row;
+    selectedRowId = eventlistArray[row].id;
     $(".entryDetails").modal();
     retrieveEvent();
 }
@@ -595,6 +594,37 @@ function toggleView(show) {
 
     document.getElementsByClassName(show)[0].style.zIndex = "3";
 
+}
+
+function sortArray(value){
+    valueArray = value.split(" ");
+
+    if(valueArray[1] == 'DESC') {
+        if(valueArray[0] == 'date') {
+            eventlistArray.sort(function (a, b) {
+                return new Date(b.start) - new Date(a.start);
+            });
+        } else{
+            eventlistArray.sort(function (a, b) {
+                if (b.title < a.title) return -1;
+                if (b.title > a.title) return 1;
+                return 0;
+            });
+        }
+    }else{
+        if(valueArray[0] == 'date') {
+            eventlistArray.sort(function (a, b) {
+                return new Date(a.start) - new Date(b.start);
+            });
+        } else{
+            eventlistArray.sort(function (a, b) {
+                if (b.title > a.title) return -1;
+                if (b.title < a.title) return 1;
+                return 0;
+            });
+        }
+    }
+    updateList(-1);
 }
 
 function test() {

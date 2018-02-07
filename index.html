@@ -1,5 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <title>Calender</title>
     <meta charset="utf-8">
@@ -53,13 +56,8 @@
 <!--######################### list View #################-->
 <div class="listView">
     <div class="list">
-        <div id="listEntry">
-            Dieser Text wird vollständig vom Javascript überschrieben
-        </div>
-
-
         <div class="dropdown">
-            <button class="btn dropbtn">Auswahl</button>
+            <button class="btn btn-sm dropbtn">Auswahl</button>
             <div class="dropdown-content">
                 <a href="javascript:updateList(5)">5</a>
                 <a href="javascript:updateList(10)">10</a>
@@ -67,6 +65,21 @@
                 <a href="javascript:updateList(-1)">All</a>
             </div>
         </div>
+
+        <div id="sortBtn" class="dropdown">
+            <button class="btn btn-sm dropbtn">Sort by</button>
+            <div class="dropdown-content">
+                <a href="javascript:sortArray('date ASC')">Date ASC</a>
+                <a href="javascript:sortArray('date DESC')">Date DESC</a>
+                <a href="javascript:sortArray('name ASC')">Name ASC</a>
+                <a href="javascript:sortArray('name DESC')">Name DESC</a>
+            </div>
+        </div>
+
+        <div id="listEntry">
+            <!--Dieser Text wird vollständig vom Javascript überschrieben-->
+        </div>
+
 
     </div>
 

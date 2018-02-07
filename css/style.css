@@ -62,10 +62,9 @@ tr:nth-child(odd) {
 .dropbtn {
     background-color: #4CAF50;
     color: white;
-    padding: 16px;
-    font-size: 16px;
     border: none;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 .dropdown {
@@ -101,9 +100,14 @@ tr:nth-child(odd) {
 
 /*###################### List View ##################*/
 .calenderList {
+    margin-top: 4%;
     border-collapse: separate;
     width: 100%;
     border: 1px;
+}
+
+#sortBtn{
+    margin-left: 100px;
 }
 
 .tableRows:hover {
@@ -127,6 +131,7 @@ tr:nth-child(odd) {
     z-index: 2;
 
 }
+
 
 /*#################### Entry Details #################*/
 .entryDetails {
