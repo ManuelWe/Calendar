@@ -10,6 +10,7 @@ function init() {
     categories("");
     retrieveEvents();
 
+    document.getElementById("checkAllday").addEventListener('change', toggleAllday);
     input = document.getElementById("uploadImage");
     input.style.opacity = 0;
     input.addEventListener('change', updateImageDisplay);
@@ -47,8 +48,14 @@ function editEvent() {
 
     document.getElementById('title').value = eventArray.title;
     document.getElementById('organizer').value = eventArray.organizer;
-    document.getElementById('start').value = eventArray.start;
-    document.getElementById('end').value = eventArray.end;
+    document.getElementById('startDate').value = eventArray.end.split("T")[0];
+    document.getElementById('startTime').value = eventArray.end.split("T")[1];
+    document.getElementById('endDate').value = eventArray.end.split("T")[0];
+    document.getElementById('endTime').value = eventArray.end.split("T")[1];
+    if (eventArray.allday) {
+        document.getElementById("checkAllday").checked = true;
+        toggleAllday();
+    }
     document.getElementById('location').value = eventArray.location;
     categories("Test");
     document.getElementById('status').value = eventArray.status;
@@ -93,20 +100,34 @@ function retrieveEvents() {
         txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + event + ")'>" +
             "<td>" +
             eventlistArray[event].title +
-            "</td>" +
-            "<td>" +
-            eventlistArray[event].end.substr(0, 10) +
-            "</td>\n" +
-            "<td>" +
-            eventlistArray[event].start.substr(11, 5) +
-            "</td>" +
-            "<td>" +
-            eventlistArray[event].end.substr(11, 5) +
-            "</td>" +
-            "<td>" +
-            eventlistArray[event].end.substr(0, 10) +
-            "</td>" +
-            "</tr>"
+            "</td>"
+        if (eventlistArray[event].allday) {
+            txt += "<td>" +
+                eventlistArray[event].start.substr(0, 10) +
+                "</td>" +
+                "<td>" +
+                "Allday" +
+                "</td>" +
+                "<td>" +
+                "</td>" +
+                "<td>" +
+                "</td>"
+        } else {
+            txt += "<td>" +
+                eventlistArray[event].start.substr(0, 10) +
+                "</td>" +
+                "<td>" +
+                eventlistArray[event].start.substr(11, 5) +
+                "</td>" +
+                "<td>" +
+                eventlistArray[event].end.substr(11, 5) +
+                "</td>" +
+                "<td>" +
+                eventlistArray[event].end.substr(0, 10) +
+                "</td>"
+        }
+
+        txt += "</tr>"
 
     }
     txt += "</table>";
@@ -127,10 +148,12 @@ function retrieveEvent() {
         "<tr>" + "<td>" +
         "<img src='img/clockIcon.png' width='20' height='20'>" +
         "</td>" + "<td>" +
-        eventArray.start.substr(0, 10) + " , " +
-        eventArray.start.substr(11, 5)
-    if (eventArray.start.substr(0, 10) !== eventArray.end.substr(0, 10)) {
-        txt += " - " + eventArray.end.substr(0, 10) + " , " +
+        eventArray.start.substr(0, 10)
+    if (eventArray.allday) {
+        txt += " Allday"
+    } else {
+        txt += " , " + eventArray.start.substr(11, 5) +
+            " - " + eventArray.end.substr(0, 10) + " , " +
             eventArray.end.substr(11, 5)
     }
     txt += "</td>" + "</tr>" +
@@ -148,11 +171,6 @@ function retrieveEvent() {
         "<img src='img/statusIcon.png' width='20' height='20'>" +
         "</td>" + "<td>" +
         eventArray.status +
-        "</td>" + "</tr>" +
-        "<tr>" + "<td>" +
-        "<img src='' alt='allday' width='20' height='20'>" +
-        "</td>" + "<td>" +
-        eventArray.allday +
         "</td>" + "</tr>" +
         "<tr>" + "<td>" +
         "<img src='img/linkIcon.png' width='20' height='20'>" +
@@ -201,12 +219,12 @@ function createEntry() {
     data.title = document.getElementById('title').value;
     data.location = document.getElementById('location').value;
     data.organizer = document.getElementById('organizer').value;
-    data.start = document.getElementById('start').value;
-    data.end = document.getElementById('end').value;
+    data.start = document.getElementById('startDate').value + "T" + document.getElementById('startTime').value;
+    data.end = document.getElementById('endDate').value + "T" + document.getElementById('endTime').value;
     data.status = document.getElementById('status').value;
-    data.allday = false;
+    data.allday = document.getElementById("checkAllday").checked;
     data.webpage = document.getElementById('webpage').value;
-    if (document.getElementById("imagePreview").style.backgroundImage === "url(img/w3newbie.png)") {
+    if (document.getElementById("imagePreview").style.backgroundImage === "url(img/logo.png)") {
 
     } else {
         data.imagedata = image;
@@ -244,18 +262,18 @@ function updateEntry() {
     data.title = document.getElementById('title').value;
     data.location = document.getElementById('location').value;
     data.organizer = document.getElementById('organizer').value;
-    data.start = document.getElementById('start').value;
-    data.end = document.getElementById('end').value;
+    data.start = document.getElementById('startDate').value + "T" + document.getElementById('startTime').value;
+    data.end = document.getElementById('endDate').value + "T" + document.getElementById('endTime').value;
     data.status = document.getElementById('status').value;
-    data.allday = false;
+    data.allday = document.getElementById("checkAllday").checked;
     data.webpage = document.getElementById('webpage').value;
-    if (document.getElementById("imagePreview").style.backgroundImage == 'url("img/w3newbie.png")') {
+    if (document.getElementById("imagePreview").style.backgroundImage == 'url("img/logo.png")') {
         deleteImageFromServer();
     } else {
         data.imagedata = image;
     }
 
-
+    console.log(data);
     xhr.onload = function () {
         retrieveEvents();
         //selectedRow = eventlistArray[eventlistArray.length - 1].id;
@@ -264,6 +282,20 @@ function updateEntry() {
     xhr.send(JSON.stringify(data));
 
 
+}
+
+function toggleAllday() {
+    if (document.getElementById("checkAllday").checked) {
+        document.getElementById("startTime").value = "00:00";
+        document.getElementById("endTime").value = "23:59";
+        document.getElementById("startTime").disabled = true;
+        document.getElementById("endTime").disabled = true;
+    } else {
+        document.getElementById("startTime").value = "";
+        document.getElementById("endTime").value = "";
+        document.getElementById("startTime").disabled = false;
+        document.getElementById("endTime").disabled = false;
+    }
 }
 
 
@@ -336,20 +368,33 @@ function updateList(count) {
         txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + i + ")'>" +
             "<td>" +
             eventlistArray[i].title +
-            "</td>" +
-            "<td>" +
-            eventlistArray[i].start.substr(0, 10) +
-            "</td>\n" +
-            "<td>" +
-            eventlistArray[i].start.substr(11, 5) +
-            "</td>" +
-            "<td>" +
-            eventlistArray[i].end.substr(11, 5) +
-            "</td>" +
-            "<td>" +
-            eventlistArray[i].end.substr(0, 10) +
-            "</td>" +
-            "</tr>"
+            "</td>"
+        if (eventlistArray[i].allday) {
+            txt += "<td>" +
+                eventlistArray[i].start.substr(0, 10) +
+                "</td>" +
+                "<td>" +
+                "Allday" +
+                "</td>" +
+                "<td>" +
+                "</td>" +
+                "<td>" +
+                "</td>"
+        } else {
+            txt += "<td>" +
+                eventlistArray[i].start.substr(0, 10) +
+                "</td>\n" +
+                "<td>" +
+                eventlistArray[i].start.substr(11, 5) +
+                "</td>" +
+                "<td>" +
+                eventlistArray[i].end.substr(11, 5) +
+                "</td>" +
+                "<td>" +
+                eventlistArray[i].end.substr(0, 10) +
+                "</td>" +
+                "</tr>"
+        }
     }
 
     txt += "</table>"
@@ -510,13 +555,13 @@ function updateImageDisplay() {
                 para.textContent = 'File name ' + curFiles[i].name + ': Not a valid file type. Update your selection.';
                 listItem.appendChild(para);
                 list.appendChild(listItem);
-                document.getElementById("imagePreview").style.backgroundImage = "url(img/w3newbie.png)";
+                document.getElementById("imagePreview").style.backgroundImage = "url(img/logo.png)";
                 window.alert("Please select an JPEG or PNG File format!");
             } else {
                 para.textContent = 'File name ' + curFiles[i].name + ': Image too large. Update your selection.';
                 listItem.appendChild(para);
                 list.appendChild(listItem);
-                document.getElementById("imagePreview").style.backgroundImage = "url(img/w3newbie.png)";
+                document.getElementById("imagePreview").style.backgroundImage = "url(img/logo.png)";
                 window.alert("Please select a picture smaller than 500kB!");
             }
 
@@ -562,7 +607,7 @@ function addImage() {
 
 function deleteImage() {
     image = null;
-    document.getElementById("imagePreview").style.backgroundImage = "url(img/w3newbie.png)";
+    document.getElementById("imagePreview").style.backgroundImage = "url(img/logo.png)";
 }
 
 function deleteImageFromServer() {
@@ -596,27 +641,27 @@ function toggleView(show) {
 
 }
 
-function sortArray(value){
+function sortArray(value) {
     valueArray = value.split(" ");
 
-    if(valueArray[1] == 'DESC') {
-        if(valueArray[0] == 'date') {
+    if (valueArray[1] == 'DESC') {
+        if (valueArray[0] == 'date') {
             eventlistArray.sort(function (a, b) {
                 return new Date(b.start) - new Date(a.start);
             });
-        } else{
+        } else {
             eventlistArray.sort(function (a, b) {
                 if (b.title < a.title) return -1;
                 if (b.title > a.title) return 1;
                 return 0;
             });
         }
-    }else{
-        if(valueArray[0] == 'date') {
+    } else {
+        if (valueArray[0] == 'date') {
             eventlistArray.sort(function (a, b) {
                 return new Date(a.start) - new Date(b.start);
             });
-        } else{
+        } else {
             eventlistArray.sort(function (a, b) {
                 if (b.title > a.title) return -1;
                 if (b.title < a.title) return 1;

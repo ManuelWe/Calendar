@@ -39,7 +39,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><img src="img/w3newbie.png"></a>
+            <a class="navbar-brand" href="#"><img id="logo" src="img/logo.png" height="130px" width="200px"></a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar right">
@@ -148,67 +148,76 @@
 
 <!--######################### Create Entry ###################-->
 <div class="createEntry">
-        <div class="form-row">
-            <div class="form-group col-md-3">
-                <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" placeholder="Meeting, Sport etc...">
-            </div>
-            <div class="form-group col-md-3">
-                <label for="organizer">Organizer</label>
-                <input type="text" class="form-control" id="organizer" placeholder="Your name">
-            </div>
-            <div class="form-group col-md-3">
-                <label for="start">Start</label>
-                <input type="datetime-local" class="form-control" id="start">
-            </div>
-            <div class="form-group col-md-3">
-                <label for="end">End</label>
-                <input type="datetime-local" class="form-control" id="end">
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" id="title" placeholder="Meeting, Sport etc...">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="organizer">Organizer</label>
+            <input type="text" class="form-control" id="organizer" placeholder="Your name">
+        </div>
+        Allday Event: <input type="checkbox" id="checkAllday">
+        <div class="form-group col-md-3">
+            <label for="startDate">Start</label>
+            <input type="date" class="form-control" id="startDate">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="startTime">Start</label>
+            <input type="time" class="form-control" id="startTime">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="endDate">End</label>
+            <input type="date" class="form-control" id="endDate">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="endTime">End</label>
+            <input type="time" class="form-control" id="endTime">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label for="location">Location</label>
+            <input type="text" class="form-control" id="location" placeholder="Office, Home etc...">
+        </div>
+        <div id="list" class="form-group col-md-3">
+            <div id="list1">
+                Dieser Text wird überschrieben
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group col-md-3">
-                <label for="location">Location</label>
-                <input type="text" class="form-control" id="location" placeholder="Office, Home etc...">
-            </div>
-            <div id="list" class="form-group col-md-3">
-                <div id="list1">
-                    Dieser Text wird überschrieben
+        <div class="form-group col-md-3">
+            <label for="status">Status</label>
+            <select id="status" class="form-control">
+                <option>Busy</option>
+                <option>Free</option>
+                <option>Tentative</option>
+            </select>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="webpage">Webpage</label>
+            <input type="text" class="form-control" id="webpage" placeholder="google.de">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-11">
+            <form id="imageForm">
+                <label for="uploadImage">Select Image (PNG or JPEG)</label>
+                <input type="file" class="form-control-file" id="uploadImage" accept=".jpeg, .png">
+                <div class="preview">
+                    <p>No files currently selected for upload</p>
                 </div>
-            </div>
-            <div class="form-group col-md-3">
-                <label for="status">Status</label>
-                <select id="status" class="form-control">
-                    <option>Busy</option>
-                    <option>Free</option>
-                    <option>Tentative</option>
-                </select>
-            </div>
-            <div class="form-group col-md-3">
-                <label for="webpage">Webpage</label>
-                <input type="text" class="form-control" id="webpage" placeholder="google.de">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-11">
-                <form id="imageForm">
-                    <label for="uploadImage">Select Image (PNG or JPEG)</label>
-                    <input type="file" class="form-control-file" id="uploadImage" accept=".jpeg, .png">
-                    <div class="preview">
-                        <p>No files currently selected for upload</p>
+                <div class="imageContainer" onclick="deleteImage()">
+                    <div id="imagePreview"></div>
+                    <div class="fadeinContainer">
+                        <img id="deleteImage" src="img/deleteIcon.png" width="50" height="50" alt="Icon Delete">
                     </div>
-                    <div class="imageContainer" onclick="deleteImage()">
-                        <div id="imagePreview"></div>
-                        <div class="fadeinContainer">
-                            <img id="deleteImage" src="img/deleteIcon.png" width="50" height="50" alt="Icon Delete">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="form-group col-md-1">
-                <button onclick="updateEntry();" class="btn btn-primary">Confirm</button>
-            </div>
+                </div>
+            </form>
         </div>
+        <div class="form-group col-md-1">
+            <button onclick="updateEntry();" class="btn btn-primary">Confirm</button>
+        </div>
+    </div>
 </div>
 
 </body>
