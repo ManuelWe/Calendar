@@ -27,6 +27,7 @@
     });
     </script>
 
+    <link rel="stylesheet" href="css/custom.css">
 </head>
 <body onload="init()">
 
@@ -52,7 +53,6 @@
         </div>
     </div>
 </nav>
-
 <!--######################### list View #################-->
 <div class="listView">
     <div class="list">
@@ -151,33 +151,58 @@
     <div class="form-row">
         <div class="form-group col-md-3">
             <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" placeholder="Meeting, Sport etc...">
         </div>
         <div class="form-group col-md-3">
             <label for="organizer">Organizer</label>
-            <input type="text" class="form-control" id="organizer" placeholder="Your name">
-        </div>
-        Allday Event: <input type="checkbox" id="checkAllday">
-        <div class="form-group col-md-3">
-            <label for="startDate">Start</label>
-            <input type="date" class="form-control" id="startDate">
         </div>
         <div class="form-group col-md-3">
             <label for="startTime">Start</label>
+        </div>
+        <div class="form-group col-md-1">
+            <label for="endTime">End</label>
+        </div>
+        <div class="form-group col-md-2">
+            <div clas="form-row">
+                <div class="form-group col-md-5">
+                    <label>Allday</label>
+                </div>
+                <div class="form-group col-md-1">
+                    <input type="checkbox" id="checkAllday">
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control" id="title" placeholder="Meeting, Sport etc...">
+        </div>
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control" id="organizer" placeholder="Your name">
+        </div>
+        <div class="form-group col-md-3">
             <input type="time" class="form-control" id="startTime">
         </div>
         <div class="form-group col-md-3">
-            <label for="endDate">End</label>
-            <input type="date" class="form-control" id="endDate">
-        </div>
-        <div class="form-group col-md-3">
-            <label for="endTime">End</label>
             <input type="time" class="form-control" id="endTime">
         </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md-3">
             <label for="location">Location</label>
+        </div>
+        <div id="list0" class="form-group col-md-3">
+            <label>Category</label>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="status">Status</label>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="webpage">Webpage</label>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-3">
             <input type="text" class="form-control" id="location" placeholder="Office, Home etc...">
         </div>
         <div id="list" class="form-group col-md-3">
@@ -186,7 +211,6 @@
             </div>
         </div>
         <div class="form-group col-md-3">
-            <label for="status">Status</label>
             <select id="status" class="form-control">
                 <option>Busy</option>
                 <option>Free</option>
@@ -194,12 +218,11 @@
             </select>
         </div>
         <div class="form-group col-md-3">
-            <label for="webpage">Webpage</label>
             <input type="text" class="form-control" id="webpage" placeholder="google.de">
         </div>
     </div>
     <div class="form-row">
-        <div class="form-group col-md-11">
+        <div class="form-group col-md-1">
             <form id="imageForm">
                 <label for="uploadImage">Select Image (PNG or JPEG)</label>
                 <input type="file" class="form-control-file" id="uploadImage" accept=".jpeg, .png">
@@ -213,6 +236,8 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <div class="form-group col-md-10">
         </div>
         <div class="form-group col-md-1">
             <button onclick="updateEntry();" class="btn btn-primary">Confirm</button>

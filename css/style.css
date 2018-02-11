@@ -1,4 +1,4 @@
-html {
+fhtml {
     overflow-y: scroll;
 }
 
@@ -7,6 +7,7 @@ body:first-child {
 }
 
 h3 {
+    float: left;
     float: left;
     margin-bottom: 10%;
 }
@@ -280,31 +281,3 @@ form label:active, form button:active {
     background-color: #0D3F8F;
     color: white;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -4,7 +4,6 @@ var selectedRowId;
 var categorylistArray;
 var image;
 
-
 function init() {
     retrieveCategories("initCall");
     categories("");
@@ -20,8 +19,7 @@ function init() {
 //######################## Entries #######################
 //creates an input field with a datalist from the Categories
 function categories(inputValue) {
-    var txt = "<label for='category'>Category</label>" +
-        "<input class='form-control' list='listCategory' id='category' value='" +
+    var txt = "<input class='form-control' list='listCategory' value='" +
         inputValue +
         "'>" +
         "<datalist id='listCategory'>";
@@ -633,12 +631,18 @@ function toggleView(show) {
     $(".entryDetails").modal("hide");
     $(".newCategory").modal("hide");
 
-    document.getElementsByClassName("listView")[0].style.zIndex = "1";
-    document.getElementsByClassName("monthView")[0].style.zIndex = "1";
-    document.getElementsByClassName("createEntry")[0].style.zIndex = "1";
+    document.getElementsByClassName("listView")[0].style.display = "none";
+    document.getElementsByClassName("monthView")[0].style.display = "none";
+    document.getElementsByClassName("createEntry")[0].style.display = "none";
+    document.getElementsByClassName("monthView")[0].style.display = "none";
 
-    document.getElementsByClassName(show)[0].style.zIndex = "3";
-
+    document.getElementsByClassName(show)[0].style.display = "block";
+    $('.nav li').click(function(){
+        $('.nav li').removeClass('active');
+        $('.nav li').removeClass('focus');
+        $(this).addClass('active');
+        $(this).addClass('focus');
+    })
 }
 
 function sortArray(value) {
