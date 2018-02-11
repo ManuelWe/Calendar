@@ -13,6 +13,10 @@ function init() {
     input = document.getElementById("uploadImage");
     input.style.opacity = 0;
     input.addEventListener('change', updateImageDisplay);
+
+    document.getElementsByClassName("monthView")[0].style.display = "none";
+    document.getElementsByClassName("createEntry")[0].style.display = "none";
+    document.getElementsByClassName("monthView")[0].style.display = "none";
 }
 
 
