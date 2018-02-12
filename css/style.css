@@ -161,7 +161,7 @@ tr:nth-child(odd) {
     background-color: white;
 }
 
-#editCategoryIcon {
+.editCategoryIcon {
     position: absolute;
     margin-top: 50px;
 
@@ -189,7 +189,7 @@ tr:nth-child(odd) {
 
 }
 
-#displayCategories {
+.displayCategories {
     margin-top: 50px;
     position: absolute;
 }

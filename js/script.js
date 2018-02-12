@@ -6,7 +6,7 @@ var image;
 
 function init() {
     retrieveCategories("initCall");
-    categories("");
+    //categories("");
     retrieveEvents();
 
     document.getElementById("checkAllday").addEventListener('change', toggleAllday);
@@ -34,12 +34,15 @@ function categories(inputValue) {
             "'>";
     }
     txt = txt + "</datalist>";
-    document.getElementById("list1").innerHTML = txt;
+    //document.getElementById("list1").innerHTML = txt;
 }
 
 
 //Fills the selected event into the createEntry div
 function editEvent() {
+
+    document.getElementById("submitBtn").innerHTML = "<button onclick='updateEntry();' class='btn btn-primary'>Confirm</button>";
+
     console.log("Hier");
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
@@ -522,6 +525,11 @@ function addCategory(selectedCategory) {
     xhr.send(data);
 }
 
+function showCategoryList(){
+    $(".newCategory").modal();
+
+}
+
 //####################### Images ####################
 function updateImageDisplay() {
     var preview = document.querySelector('.preview');
@@ -647,6 +655,10 @@ function toggleView(show) {
         $(this).addClass('active');
         $(this).addClass('focus');
     })
+}
+
+function changeButton(){
+    document.getElementById("submitBtn").innerHTML = "<button onclick='createEntry();' class='btn btn-primary'>Confirm</button>";
 }
 
 function sortArray(value) {
