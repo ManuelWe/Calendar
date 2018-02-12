@@ -692,6 +692,35 @@ function sortArray(value) {
     updateList(-1);
 }
 
+function validateInput(){
+    if(!getElementsByTagName("title").value || getElementsByTagName("title").value.length>50){
+        return;
+    }
+    if(!getElementsByTagName("organizer").value || getElementsByTagName("organizer").value.length>50){
+        return;
+    }
+    if(!getElementsByTagName("startTime").value){
+        return;
+    }
+    if(!getElementsByTagName("endTime").value){
+        return;
+    }
+    if(!getElementsByTagName("startDate").value){
+        return;
+    }
+    if(!getElementsByTagName("endDate").value){
+        return;
+    }
+    if(getElementsByTagName("location").value>50){
+        return;
+    }
+    if(!getElementsByTagName("status").value){
+        return;
+    }
+    if(getElementsByTagName("webpage").value>100){
+        return;
+    }
+}
 function test() {
 
 }
