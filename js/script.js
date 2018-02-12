@@ -23,7 +23,7 @@ function init() {
 //######################## Entries #######################
 //creates an input field with a datalist from the Categories
 function categories(inputValue) {
-    var txt = "<input class='form-control' list='listCategory' value='" +
+    var txt = "<input class='form-control' list='listCategory' id='category' value='" +
         inputValue +
         "'>" +
         "<datalist id='listCategory'>";
