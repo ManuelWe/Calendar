@@ -257,6 +257,16 @@ function createEntry() {
     xhr.send(JSON.stringify(data));
 
 
+    document.getElementById("title").value = '';
+    document.getElementById('location').value = '';
+    document.getElementById('organizer').value = '';
+    document.getElementById('startDate').value = '';
+    document.getElementById('startTime').value = '';
+    document.getElementById('endDate').value = '';
+    document.getElementById('endTime').value = '';
+    document.getElementById("checkAllday").checked = false;
+    document.getElementById('webpage').value = '';
+
 }
 
 function updateEntry() {
@@ -409,9 +419,7 @@ function updateList(count) {
     document.getElementById("listEntry").innerHTML = txt;
 }
 
-
 //########################## Categories ##################
-
 function categoryWindow() {
     if (edit) retrieveCategories();
     else showCategoryList();
@@ -682,7 +690,7 @@ function changeButton() {
             document.getElementById("category" + categorylistArray[cat].id).style.backgroundColor = "#F0F8FF";
         }
     }
-    document.getElementById("submitBtn").innerHTML = "<button onclick='createEntry();' class='btn btn-primary'>Confirm</button>";
+    document.getElementById("submitBtn").innerHTML = "<button onclick='validateInput();' class='btn btn-primary'>Confirm</button>";
 }
 
 function sortArray(value) {
@@ -717,33 +725,49 @@ function sortArray(value) {
 }
 
 function validateInput() {
-    if (!getElementsByTagName("title").value || getElementsByTagName("title").value.length > 50) {
+    var title = document.getElementById("title").value
+    var organizer = document.getElementById("organizer").value
+    var location = document.getElementById("location").value
+    var webpage = document.getElementById("webpage").value
+    var valid = true;
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (!title || title.length > 50){
+        valid = false;
+    }
+    if (!organizer || !re.test(organizer)){
+        valid = false;
+    }
+    if (!document.getElementById("startTime").value) {
+        valid = false;
+    }
+    if (!document.getElementById("endTime").value) {
+        valid = false;
+    }
+    if (!document.getElementById("startDate").value) {
+        valid = false;
+    }
+    if (!document.getElementById("endDate").value) {
+        valid = false;
+    }
+    if (!location || location.length > 50){
+        valid = false;
+    }
+    if (!document.getElementById("status").value) {
+        valid = false;
+    }
+    if (!webpage || webpage.length > 100){
+        valid = false;
+    }
+
+    if(valid){
+        createEntry();
+    }
+    else{
+        alert("Your input is not valid!")
         return;
     }
-    if (!getElementsByTagName("organizer").value || getElementsByTagName("organizer").value.length > 50) {
-        return;
-    }
-    if (!getElementsByTagName("startTime").value) {
-        return;
-    }
-    if (!getElementsByTagName("endTime").value) {
-        return;
-    }
-    if (!getElementsByTagName("startDate").value) {
-        return;
-    }
-    if (!getElementsByTagName("endDate").value) {
-        return;
-    }
-    if (getElementsByTagName("location").value > 50) {
-        return;
-    }
-    if (!getElementsByTagName("status").value) {
-        return;
-    }
-    if (getElementsByTagName("webpage").value > 100) {
-        return;
-    }
+    return;
 }
 
 function test() {
