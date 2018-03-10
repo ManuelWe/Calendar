@@ -1,8 +1,10 @@
 var eventArray;
 var eventlistArray;
 var selectedRowId;
+var categoryArray = [];
 var categorylistArray;
 var image;
+var edit = true;
 
 function init() {
     retrieveCategories("initCall");
@@ -40,10 +42,9 @@ function categories(inputValue) {
 
 //Fills the selected event into the createEntry div
 function editEvent() {
-
+    edit = true;
     document.getElementById("submitBtn").innerHTML = "<button onclick='updateEntry();' class='btn btn-primary'>Confirm</button>";
 
-    console.log("Hier");
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
     xhr.open("GET", url, false);
@@ -197,8 +198,10 @@ function retrieveEvent() {
             categories += eventArray.categories[i].name + ", ";
         }
         categories += eventArray.categories[i].name;
+        document.getElementById("displayCategoriesEntry").innerHTML = categories;
         document.getElementById("displayCategories").innerHTML = categories;
     } else {
+        document.getElementById("displayCategoriesEntry").innerHTML = "No Category yet";
         document.getElementById("displayCategories").innerHTML = "No Category yet";
     }
 
@@ -409,6 +412,11 @@ function updateList(count) {
 
 //########################## Categories ##################
 
+function categoryWindow() {
+    if (edit) retrieveCategories();
+    else showCategoryList();
+}
+
 //retrieves all Categories and displays them in a list
 function retrieveCategories(initCall) {
 
@@ -450,13 +458,21 @@ function markCategories() {
 
 //handles a Click on a Category
 function targetCategory(category) {
-    if (document.getElementById("category" + categorylistArray[category].id).style.backgroundColor == "rgb(94, 68, 133)") {
-        removeCategory(category);
-        document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "white";
-    }
-    else {
-        addCategory(category);
-        document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#5E4485";
+    if (edit) {
+        if (document.getElementById("category" + categorylistArray[category].id).style.backgroundColor == "rgb(94, 68, 133)") {
+            removeCategory(category);
+            if (category % 2 == 0) {
+                document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#87CEEB";
+            } else {
+                document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#F0F8FF";
+            }
+        } else {
+            addCategory(category);
+            document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#5E4485";
+        }
+    } else {
+        window.alert("Wip");
+        console.log("hi");
     }
 }
 
@@ -525,7 +541,7 @@ function addCategory(selectedCategory) {
     xhr.send(data);
 }
 
-function showCategoryList(){
+function showCategoryList() {
     $(".newCategory").modal();
 
 }
@@ -649,7 +665,7 @@ function toggleView(show) {
     document.getElementsByClassName("monthView")[0].style.display = "none";
 
     document.getElementsByClassName(show)[0].style.display = "block";
-    $('.nav li').click(function(){
+    $('.nav li').click(function () {
         $('.nav li').removeClass('active');
         $('.nav li').removeClass('focus');
         $(this).addClass('active');
@@ -657,7 +673,15 @@ function toggleView(show) {
     })
 }
 
-function changeButton(){
+function changeButton() {
+    edit = false;
+    for (cat in categorylistArray) {
+        if (cat % 2 == 0) {
+            document.getElementById("category" + categorylistArray[cat].id).style.backgroundColor = "#87CEEB";
+        } else {
+            document.getElementById("category" + categorylistArray[cat].id).style.backgroundColor = "#F0F8FF";
+        }
+    }
     document.getElementById("submitBtn").innerHTML = "<button onclick='createEntry();' class='btn btn-primary'>Confirm</button>";
 }
 
@@ -692,35 +716,36 @@ function sortArray(value) {
     updateList(-1);
 }
 
-function validateInput(){
-    if(!getElementsByTagName("title").value || getElementsByTagName("title").value.length>50){
+function validateInput() {
+    if (!getElementsByTagName("title").value || getElementsByTagName("title").value.length > 50) {
         return;
     }
-    if(!getElementsByTagName("organizer").value || getElementsByTagName("organizer").value.length>50){
+    if (!getElementsByTagName("organizer").value || getElementsByTagName("organizer").value.length > 50) {
         return;
     }
-    if(!getElementsByTagName("startTime").value){
+    if (!getElementsByTagName("startTime").value) {
         return;
     }
-    if(!getElementsByTagName("endTime").value){
+    if (!getElementsByTagName("endTime").value) {
         return;
     }
-    if(!getElementsByTagName("startDate").value){
+    if (!getElementsByTagName("startDate").value) {
         return;
     }
-    if(!getElementsByTagName("endDate").value){
+    if (!getElementsByTagName("endDate").value) {
         return;
     }
-    if(getElementsByTagName("location").value>50){
+    if (getElementsByTagName("location").value > 50) {
         return;
     }
-    if(!getElementsByTagName("status").value){
+    if (!getElementsByTagName("status").value) {
         return;
     }
-    if(getElementsByTagName("webpage").value>100){
+    if (getElementsByTagName("webpage").value > 100) {
         return;
     }
 }
+
 function test() {
 
 }

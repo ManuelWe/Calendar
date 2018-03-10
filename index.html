@@ -108,7 +108,7 @@
                 <div id="displayCategoriesEntry" class="displayCategories">
                     Dieser Text wird vollständig vom Javascript überschrieben
                 </div>
-                <input  class="editCategoryIcon iconButton" type="image" src="img/editIcon.png" width="20"
+                <input class="editCategoryIcon iconButton" type="image" src="img/editIcon.png" width="20"
                        height="20"
                        onclick="javascript:retrieveCategories()" alt="Icon Edit">
                 <div id="entryTable">
@@ -210,11 +210,10 @@
         </div>
         <div id="list" class="form-group col-md-3">
             <div id="displayCategories" class="displayCategories">
-                Dieser Text wird vollständig vom Javascript überschrieben
             </div>
-            <input  class="editCategoryIcon iconButton" type="image" src="img/editIcon.png" width="20"
-                    height="20"
-                    onclick="javascript:showCategoryList()" alt="Icon Edit">
+            <input id="editCategory" class="editCategoryIcon iconButton" type="image" src="img/editIcon.png" width="20"
+                   height="20"
+                   onclick="javascript:categoryWindow()" alt="Icon Edit">
         </div>
         <div class="form-group col-md-3">
             <select id="status" class="form-control" required>
