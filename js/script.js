@@ -85,6 +85,7 @@ function retrieveEvents() {
     xhr.send();
 
     eventlistArray = JSON.parse(xhr.responseText);
+    selectedRowId = eventlistArray[eventlistArray.length - 1].id;
     sortArray("date ASC");
 
     var txt = "<table class='calenderList'>" +
@@ -213,15 +214,6 @@ function createEntry() {
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "json");
-    /*console.log(document.getElementById('title').value);
-    console.log(document.getElementById('location').value);
-    console.log(document.getElementById('organizer').value);
-    console.log(document.getElementById('start').value);
-    console.log(document.getElementById('end').value);
-    console.log(document.getElementById('status').value);
-    console.log(document.getElementById('allDay').checked);
-    console.log(document.getElementById('webpage').value);
-    console.log("hi");*/
 
     var data = {};
     data.title = document.getElementById('title').value;
@@ -249,23 +241,18 @@ function createEntry() {
     "allday": false,
     "webpage": "google.com"*/
     console.log(data);
+
     xhr.onload = function () {
         retrieveEvents();
-        //selectedRow = eventlistArray[eventlistArray.length - 1].id;
         toggleView("listView");
+        if (categoryArray.length != 0) {
+            for (i in categoryArray) {
+                addCategory(categoryArray[i]);
+            }
+        }
+        clearFields();
     };
     xhr.send(JSON.stringify(data));
-
-
-    document.getElementById("title").value = '';
-    document.getElementById('location').value = '';
-    document.getElementById('organizer').value = '';
-    document.getElementById('startDate').value = '';
-    document.getElementById('startTime').value = '';
-    document.getElementById('endDate').value = '';
-    document.getElementById('endTime').value = '';
-    document.getElementById("checkAllday").checked = false;
-    document.getElementById('webpage').value = '';
 
 }
 
@@ -299,6 +286,7 @@ function updateEntry() {
     };
     xhr.send(JSON.stringify(data));
 
+    clearFields();
 
 }
 
@@ -466,6 +454,7 @@ function markCategories() {
 
 //handles a Click on a Category
 function targetCategory(category) {
+
     if (edit) {
         if (document.getElementById("category" + categorylistArray[category].id).style.backgroundColor == "rgb(94, 68, 133)") {
             removeCategory(category);
@@ -479,8 +468,29 @@ function targetCategory(category) {
             document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#5E4485";
         }
     } else {
-        window.alert("Wip");
-        console.log("hi");
+        if($.inArray(category, categoryArray) != -1){
+            categoryArray.splice(categoryArray.indexOf(category), 1);
+            if (category % 2 == 0) {
+                document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#87CEEB";
+            } else {
+                document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#F0F8FF";
+            }
+        } else{
+            categoryArray[categoryArray.length] = category;
+            document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#5E4485";
+        }
+
+            if (categoryArray.length !== 0) {
+                var categories = "";
+                for (i = 0; i < categoryArray.length - 1; i++) {
+                    categories += categorylistArray[categoryArray[i]].name + ", ";
+                }
+                categories += categorylistArray[categoryArray[i]].name;
+                document.getElementById("displayCategories").innerHTML = categories;
+            } else {
+                document.getElementById("displayCategories").innerHTML = "No Category yet";
+            }
+
     }
 }
 
@@ -664,6 +674,9 @@ function targetRow(row) {
 
 //handles which container is displayed
 function toggleView(show) {
+    if(show === "listView"){
+        edit = true;
+    }
     $(".entryDetails").modal("hide");
     $(".newCategory").modal("hide");
 
@@ -690,6 +703,7 @@ function changeButton() {
             document.getElementById("category" + categorylistArray[cat].id).style.backgroundColor = "#F0F8FF";
         }
     }
+    clearFields();
     document.getElementById("submitBtn").innerHTML = "<button onclick='validateInput();' class='btn btn-primary'>Confirm</button>";
 }
 
@@ -770,10 +784,19 @@ function validateInput() {
     return;
 }
 
-function test() {
-
+function clearFields() {
+    document.getElementById("title").value = '';
+    document.getElementById('location').value = '';
+    document.getElementById('organizer').value = '';
+    document.getElementById('startDate').value = '';
+    document.getElementById('startTime').value = '';
+    document.getElementById('endDate').value = '';
+    document.getElementById('endTime').value = '';
+    document.getElementById("checkAllday").checked = false;
+    document.getElementById('webpage').value = '';
+    categoryArray.length = 0;
+    document.getElementById("displayCategories").innerHTML = "No Category yet";
 }
-
 
 
 
