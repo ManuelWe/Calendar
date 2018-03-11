@@ -10,24 +10,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/fullcalendar.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/custom.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src='js/jquery.min.js'></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src='js/moment.min.js'></script>
     <script src='js/fullcalendar.js'></script>
     <script src="js/script.js"></script>
-    <script> $(document).ready(function () {
 
-        // page is now ready, initialize the calendar...
 
-        $('#calendar').fullCalendar({
-            // put your options and callbacks here
-        })
-
-    });
-    </script>
-
-    <link rel="stylesheet" href="css/custom.css">
 </head>
 <body onload="init()">
 
@@ -44,11 +35,9 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar right">
-                <li class="active"><a href="javascript:toggleView('listView')">Home</a></li>
-                <li><a href="javascript:toggleView('createEntry');changeButton()">Termin erstellen</a></li>
-                <li><a href="javascript:createTestEntry()">Test erstellen</a></li>
-                <li><a href="javascript:toggleView('monthView')">Month View</a></li>
-                <li><a href="#">Contact</a></li>
+                <li class="active"><a id="listBtn" href="javascript:toggleView('listView')">List View</a></li>
+                <li><a id="monthBtn" href="javascript:toggleView('monthView')">Month View</a></li>
+                <li><a href="javascript:toggleView('createEntry');changeButton()">Create Entry</a></li>
             </ul>
         </div>
     </div>
@@ -57,7 +46,7 @@
 <div class="listView">
     <div class="list">
         <div class="dropdown">
-            <button class="btn btn-sm dropbtn">Auswahl</button>
+            <button class="btn btn-sm dropbtn">Show Entries</button>
             <div class="dropdown-content">
                 <a href="javascript:updateList(5)">5</a>
                 <a href="javascript:updateList(10)">10</a>
@@ -244,7 +233,7 @@
         <div class="form-group col-md-10">
         </div>
         <div class="form-group col-md-1">
-            <div id="submitBtn"></div>
+            <button onclick='validateInput();' class='btn btn-primary'>Confirm</button>
         </div>
     </div>
 </div>

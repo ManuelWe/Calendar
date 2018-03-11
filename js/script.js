@@ -5,11 +5,13 @@ var categoryArray = [];
 var categorylistArray;
 var image;
 var edit = true;
+var events;
 
 function init() {
     retrieveCategories("initCall");
-    //categories("");
-    retrieveEvents();
+    retrieveEvents("init");
+    monthView();
+
 
     document.getElementById("checkAllday").addEventListener('change', toggleAllday);
     input = document.getElementById("uploadImage");
@@ -19,8 +21,48 @@ function init() {
     document.getElementsByClassName("monthView")[0].style.display = "none";
     document.getElementsByClassName("createEntry")[0].style.display = "none";
     document.getElementsByClassName("monthView")[0].style.display = "none";
+
+    $('.nav li').click(function () {
+        $('.nav li').removeClass('active');
+        $('.nav li').removeClass('focus');
+        $(this).addClass('active');
+        $(this).addClass('focus');
+    });
+
+    $(window).trigger("resize");
 }
 
+function monthView(){
+
+    $('#calendar').fullCalendar({
+        themeSystem: 'bootstrap3',
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay'
+        },
+        eventLimit: true, // allow "more" link when too many events
+
+        events: events,
+        /*eventColor: 'blue',
+        eventBackgroundColor: 'blue',
+        eventBorderColor: 'blue',
+        eventTextColor: 'black',*/
+
+        eventClick: function (calEvent) {
+            selectedRowId = calEvent.id;
+            $(".entryDetails").modal();
+            retrieveEvent();
+            $(this).css('border-color', 'red');
+        },
+        eventMouseover: function (event) {
+            $(this).css('border-color', 'green');
+        },
+        eventMouseout: function (event) {
+            $(this).css('border-color', 'white');
+        }
+    });
+}
 
 //######################## Entries #######################
 //creates an input field with a datalist from the Categories
@@ -43,7 +85,6 @@ function categories(inputValue) {
 //Fills the selected event into the createEntry div
 function editEvent() {
     edit = true;
-    document.getElementById("submitBtn").innerHTML = "<button onclick='updateEntry();' class='btn btn-primary'>Confirm</button>";
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
@@ -77,7 +118,7 @@ function editEvent() {
 
 
 //Retrieves every Event from the Server and displays them in a list
-function retrieveEvents() {
+function retrieveEvents(call) {
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
@@ -85,6 +126,17 @@ function retrieveEvents() {
     xhr.send();
 
     eventlistArray = JSON.parse(xhr.responseText);
+
+    events = JSON.parse(JSON.stringify(eventlistArray));
+    for(event in events){
+        events[event].allDay = events[event].allday;
+        delete events[event].allday;
+    }
+    if(call !== "init") {
+        $('#calendar').fullCalendar('removeEvents');
+        $('#calendar').fullCalendar('addEventSource', events);
+    }
+
     selectedRowId = eventlistArray[eventlistArray.length - 1].id;
     sortArray("date ASC");
 
@@ -281,7 +333,6 @@ function updateEntry() {
     console.log(data);
     xhr.onload = function () {
         retrieveEvents();
-        //selectedRow = eventlistArray[eventlistArray.length - 1].id;
         toggleView("listView");
     };
     xhr.send(JSON.stringify(data));
@@ -302,36 +353,6 @@ function toggleAllday() {
         document.getElementById("startTime").disabled = false;
         document.getElementById("endTime").disabled = false;
     }
-}
-
-
-//creates a standard entry for testing
-function createTestEntry() {
-    var xhr = new XMLHttpRequest();
-    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
-
-    var data = JSON.stringify(
-        {
-            "id": 1,
-            "title": "Toller Termin",
-            "location": null,
-            "organizer": "test@dsad.com",
-            "start": "2017-12-11T11:11",
-            "end": "2017-12-11T11:15",
-            "status": "Busy",
-            "allday": false,
-            "webpage": "google.com"
-        }
-    );
-
-    xhr.onload = function () {
-        retrieveEvents();
-        toggleView("listView");
-    };
-    xhr.send(data);
-
 }
 
 // deletes an entry and updates the list
@@ -468,28 +489,28 @@ function targetCategory(category) {
             document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#5E4485";
         }
     } else {
-        if($.inArray(category, categoryArray) != -1){
+        if ($.inArray(category, categoryArray) != -1) {
             categoryArray.splice(categoryArray.indexOf(category), 1);
             if (category % 2 == 0) {
                 document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#87CEEB";
             } else {
                 document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#F0F8FF";
             }
-        } else{
+        } else {
             categoryArray[categoryArray.length] = category;
             document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#5E4485";
         }
 
-            if (categoryArray.length !== 0) {
-                var categories = "";
-                for (i = 0; i < categoryArray.length - 1; i++) {
-                    categories += categorylistArray[categoryArray[i]].name + ", ";
-                }
-                categories += categorylistArray[categoryArray[i]].name;
-                document.getElementById("displayCategories").innerHTML = categories;
-            } else {
-                document.getElementById("displayCategories").innerHTML = "No Category yet";
+        if (categoryArray.length !== 0) {
+            var categories = "";
+            for (i = 0; i < categoryArray.length - 1; i++) {
+                categories += categorylistArray[categoryArray[i]].name + ", ";
             }
+            categories += categorylistArray[categoryArray[i]].name;
+            document.getElementById("displayCategories").innerHTML = categories;
+        } else {
+            document.getElementById("displayCategories").innerHTML = "No Category yet";
+        }
 
     }
 }
@@ -674,8 +695,10 @@ function targetRow(row) {
 
 //handles which container is displayed
 function toggleView(show) {
-    if(show === "listView"){
+    if (show === "listView") {
         edit = true;
+    } else if(show === "monthView"){
+        //$(window).trigger("resize");
     }
     $(".entryDetails").modal("hide");
     $(".newCategory").modal("hide");
@@ -683,15 +706,9 @@ function toggleView(show) {
     document.getElementsByClassName("listView")[0].style.display = "none";
     document.getElementsByClassName("monthView")[0].style.display = "none";
     document.getElementsByClassName("createEntry")[0].style.display = "none";
-    document.getElementsByClassName("monthView")[0].style.display = "none";
 
     document.getElementsByClassName(show)[0].style.display = "block";
-    $('.nav li').click(function () {
-        $('.nav li').removeClass('active');
-        $('.nav li').removeClass('focus');
-        $(this).addClass('active');
-        $(this).addClass('focus');
-    })
+
 }
 
 function changeButton() {
@@ -704,7 +721,6 @@ function changeButton() {
         }
     }
     clearFields();
-    document.getElementById("submitBtn").innerHTML = "<button onclick='validateInput();' class='btn btn-primary'>Confirm</button>";
 }
 
 function sortArray(value) {
@@ -746,10 +762,10 @@ function validateInput() {
     var valid = true;
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (!title || title.length > 50){
+    if (!title || title.length > 50) {
         valid = false;
     }
-    if (!organizer || !re.test(organizer)){
+    if (!organizer || !re.test(organizer)) {
         valid = false;
     }
     if (!document.getElementById("startTime").value) {
@@ -764,20 +780,25 @@ function validateInput() {
     if (!document.getElementById("endDate").value) {
         valid = false;
     }
-    if (!location || location.length > 50){
+    if (!location || location.length > 50) {
         valid = false;
     }
     if (!document.getElementById("status").value) {
         valid = false;
     }
-    if (!webpage || webpage.length > 100){
+    if (!webpage || webpage.length > 100) {
         valid = false;
     }
 
-    if(valid){
-        createEntry();
+    if (valid) {
+        if(edit){
+            updateEntry();
+        } else {
+            createEntry();
+        }
+        document.getElementById("listBtn").click();
     }
-    else{
+    else {
         alert("Your input is not valid!")
         return;
     }

@@ -5,20 +5,25 @@
     padding: 1% 0;
     font-size: 1.2em;
     border: 0;
-  border-radius: 0px 0px 0px 70px;
+    border-radius: 0px 0px 0px 70px;
 }
+
 .navbar-inverse .navbar-nav .active a, .navbar-inverse .navbar-nav .active a:focus,
 .navbar-inverse .navbar-nav .active a:hover {
     color: #000000;
     background-color: #4169E1;
+    border-radius: 10px;
 }
+
 .navbar-inverse .navbar-nav li a {
     color: #000000;
 }
+
 #logo {
     margin-left: -5%;
     margin-top: -13%;
 }
+
 .dropbtn {
     background-color: #4169E1;
     color: #000000;
@@ -27,68 +32,79 @@
     margin-top: 25%;
     font-size: 16px;
 }
+
 .dropdown:hover .dropbtn {
     background-color: #87CEEB;
 }
+
 table {
-  border-collapse: collapse;
-  width: 100%;
+    border-collapse: collapse;
+    width: 100%;
 }
 
 th, td {
-  text-align: left;
-  padding: 10px;
+    text-align: left;
+    padding: 10px;
 }
 
 tr:nth-child(even) {
-  background-color: #87CEEB;
+    background-color: #87CEEB;
 }
 
 tr:nth-child(odd) {
-  background-color: #F0F8FF;
+    background-color: #F0F8FF;
 }
 
 #eventTable tr:nth-child(even) {
-  background-color: #888888;
-}
-.tableRows:hover {
-  background-color: #4169E1;
-}
-.listView{
-  background-color: #F0F8FF;
-}
-.list{
-  background-color: #F0F8FF;
-}
-.createEntry {
-  position: absolute;
-  height: 100%;
-  width: 90%;
-  z-index: 1;
-  background-color: #F0F8FF;
-}
-.form-row{
-  padding: 1%;
-  background-color: #F0F8FF;
-}
-.form-group{
-  background-color: #F0F8FF;
-}
-.monthView{
-  background-color: #F0F8FF;
-}
-#imageForm {
-  width: 600px;
-  background: #ccc;
-  margin: 2% auto;
-  padding: 5%;
-  border: 1px solid black;
+    background-color: #888888;
 }
 
-body{
-  background-color: #F0F8FF;
+.tableRows:hover {
+    background-color: #4169E1;
 }
+
+.listView {
+    background-color: #F0F8FF;
+}
+
+.list {
+    background-color: #F0F8FF;
+}
+
+.createEntry {
+    position: absolute;
+    height: 100%;
+    width: 90%;
+    z-index: 1;
+    background-color: #F0F8FF;
+}
+
+.form-row {
+    padding: 1%;
+    background-color: #F0F8FF;
+}
+
+.form-group {
+    background-color: #F0F8FF;
+}
+
+.monthView {
+    background-color: #F0F8FF;
+}
+
+#imageForm {
+    width: 600px;
+    background: #ccc;
+    margin: 2% auto;
+    padding: 5%;
+    border: 1px solid black;
+}
+
+body {
+    background-color: #F0F8FF;
+}
+
 label {
-  font-size: large;
-  cursor: default;
+    font-size: large;
+    cursor: default;
 }
