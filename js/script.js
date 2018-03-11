@@ -240,6 +240,7 @@ function createEntry() {
     "status": "Busy",
     "allday": false,
     "webpage": "google.com"*/
+    clearFields();
 
     xhr.onload = function () {
         retrieveEvents();
@@ -249,7 +250,7 @@ function createEntry() {
                 addCategory(categoryArray[i]);
             }
         }
-        clearFields();
+
     };
     xhr.send(JSON.stringify(data));
 
@@ -791,6 +792,7 @@ function validateInput(action) {
 }
 
 function clearFields() {
+    document.getElementById("checkAllday").checked = false;
     document.getElementById("title").value = '';
     document.getElementById('location').value = '';
     document.getElementById('organizer').value = '';
