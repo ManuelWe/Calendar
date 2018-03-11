@@ -292,7 +292,7 @@ function createEntry() {
     "status": "Busy",
     "allday": false,
     "webpage": "google.com"*/
-    console.log(data);
+    clearFields();
 
     xhr.onload = function () {
         retrieveEvents();
@@ -302,7 +302,7 @@ function createEntry() {
                 addCategory(categoryArray[i]);
             }
         }
-        clearFields();
+
     };
     xhr.send(JSON.stringify(data));
 
@@ -330,7 +330,6 @@ function updateEntry() {
         data.imagedata = image;
     }
 
-    console.log(data);
     xhr.onload = function () {
         retrieveEvents();
         toggleView("listView");
@@ -720,6 +719,7 @@ function changeButton() {
             document.getElementById("category" + categorylistArray[cat].id).style.backgroundColor = "#F0F8FF";
         }
     }
+    document.getElementById("submitBtn").innerHTML = "<button onclick='validateInput(\"create\");' class='btn btn-primary'>Confirm</button>";
     clearFields();
 }
 
@@ -754,7 +754,7 @@ function sortArray(value) {
     updateList(-1);
 }
 
-function validateInput() {
+function validateInput(action) {
     var title = document.getElementById("title").value
     var organizer = document.getElementById("organizer").value
     var location = document.getElementById("location").value
@@ -790,6 +790,7 @@ function validateInput() {
         valid = false;
     }
 
+
     if (valid) {
         if(edit){
             updateEntry();
@@ -797,15 +798,26 @@ function validateInput() {
             createEntry();
         }
         document.getElementById("listBtn").click();
-    }
-    else {
+    } else {
         alert("Your input is not valid!")
         return;
     }
-    return;
+
+    if(action === "update"){
+        if(valid){
+            updateEntry();
+        }
+    }
+    else{
+        if(valid){
+            createEntry();
+        }
+    }
+
 }
 
 function clearFields() {
+    document.getElementById("checkAllday").checked = false;
     document.getElementById("title").value = '';
     document.getElementById('location').value = '';
     document.getElementById('organizer').value = '';
@@ -813,11 +825,12 @@ function clearFields() {
     document.getElementById('startTime').value = '';
     document.getElementById('endDate').value = '';
     document.getElementById('endTime').value = '';
-    document.getElementById("checkAllday").checked = false;
+    toggleAllday();
     document.getElementById('webpage').value = '';
     categoryArray.length = 0;
     document.getElementById("displayCategories").innerHTML = "No Category yet";
 }
+
 
 
 
