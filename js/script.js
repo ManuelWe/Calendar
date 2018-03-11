@@ -43,7 +43,7 @@ function categories(inputValue) {
 //Fills the selected event into the createEntry div
 function editEvent() {
     edit = true;
-    document.getElementById("submitBtn").innerHTML = "<button onclick='updateEntry();' class='btn btn-primary'>Confirm</button>";
+    document.getElementById("submitBtn").innerHTML = "<button onclick='validateInput(\"update\");' class='btn btn-primary'>Confirm</button>";
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
@@ -248,7 +248,16 @@ function createEntry() {
     "status": "Busy",
     "allday": false,
     "webpage": "google.com"*/
-    console.log(data);
+
+    document.getElementById("title").value = '';
+    document.getElementById('location').value = '';
+    document.getElementById('organizer').value = '';
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = '';
+    document.getElementById("checkAllday").checked = false;
+    toggleAllday();
+    document.getElementById('webpage').value = '';
+
     xhr.onload = function () {
         retrieveEvents();
         //selectedRow = eventlistArray[eventlistArray.length - 1].id;
@@ -257,15 +266,7 @@ function createEntry() {
     xhr.send(JSON.stringify(data));
 
 
-    document.getElementById("title").value = '';
-    document.getElementById('location').value = '';
-    document.getElementById('organizer').value = '';
-    document.getElementById('startDate').value = '';
-    document.getElementById('startTime').value = '';
-    document.getElementById('endDate').value = '';
-    document.getElementById('endTime').value = '';
-    document.getElementById("checkAllday").checked = false;
-    document.getElementById('webpage').value = '';
+
 
 }
 
@@ -299,7 +300,14 @@ function updateEntry() {
     };
     xhr.send(JSON.stringify(data));
 
-
+    document.getElementById("title").value = '';
+    document.getElementById('location').value = '';
+    document.getElementById('organizer').value = '';
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = '';
+    document.getElementById("checkAllday").checked = false
+    toggleAllday();
+    document.getElementById('webpage').value = '';
 }
 
 function toggleAllday() {
@@ -690,7 +698,7 @@ function changeButton() {
             document.getElementById("category" + categorylistArray[cat].id).style.backgroundColor = "#F0F8FF";
         }
     }
-    document.getElementById("submitBtn").innerHTML = "<button onclick='validateInput();' class='btn btn-primary'>Confirm</button>";
+    document.getElementById("submitBtn").innerHTML = "<button onclick='validateInput(\"create\");' class='btn btn-primary'>Confirm</button>";
 }
 
 function sortArray(value) {
@@ -724,7 +732,7 @@ function sortArray(value) {
     updateList(-1);
 }
 
-function validateInput() {
+function validateInput(action) {
     var title = document.getElementById("title").value
     var organizer = document.getElementById("organizer").value
     var location = document.getElementById("location").value
@@ -760,14 +768,22 @@ function validateInput() {
         valid = false;
     }
 
-    if(valid){
-        createEntry();
-    }
-    else{
+    if(!valid){
         alert("Your input is not valid!")
         return;
     }
-    return;
+
+    if(action === "update"){
+        if(valid){
+            updateEntry();
+        }
+    }
+    else{
+        if(valid){
+            createEntry();
+        }
+    }
+
 }
 
 function test() {
