@@ -9,9 +9,8 @@ var events;
 
 function init() {
     retrieveCategories("initCall");
-    retrieveEvents("init");
     monthView();
-
+    retrieveEvents();
 
     document.getElementById("checkAllday").addEventListener('change', toggleAllday);
     input = document.getElementById("uploadImage");
@@ -32,7 +31,7 @@ function init() {
     $(window).trigger("resize");
 }
 
-function monthView(){
+function monthView() {
 
     $('#calendar').fullCalendar({
         themeSystem: 'bootstrap3',
@@ -43,7 +42,6 @@ function monthView(){
         },
         eventLimit: true, // allow "more" link when too many events
 
-        events: events,
         /*eventColor: 'blue',
         eventBackgroundColor: 'blue',
         eventBorderColor: 'blue',
@@ -65,22 +63,6 @@ function monthView(){
 }
 
 //######################## Entries #######################
-//creates an input field with a datalist from the Categories
-function categories(inputValue) {
-    var txt = "<input class='form-control' list='listCategory' id='category' value='" +
-        inputValue +
-        "'>" +
-        "<datalist id='listCategory'>";
-    for (category in categorylistArray) {
-        txt = txt +
-            "<option value='" +
-            categorylistArray[category].name +
-            "'>";
-    }
-    txt = txt + "</datalist>";
-    //document.getElementById("list1").innerHTML = txt;
-}
-
 
 //Fills the selected event into the createEntry div
 function editEvent() {
@@ -88,31 +70,36 @@ function editEvent() {
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
-    xhr.open("GET", url, false);
+    xhr.open("GET", url, true);
     xhr.send();
+    xhr.onload = function (e) {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                eventArray = JSON.parse(xhr.responseText);
 
-    eventArray = JSON.parse(xhr.responseText);
+                document.getElementById('title').value = eventArray.title;
+                document.getElementById('organizer').value = eventArray.organizer;
+                document.getElementById('startDate').value = eventArray.end.split("T")[0];
+                document.getElementById('startTime').value = eventArray.end.split("T")[1];
+                document.getElementById('endDate').value = eventArray.end.split("T")[0];
+                document.getElementById('endTime').value = eventArray.end.split("T")[1];
+                if (eventArray.allday) {
+                    document.getElementById("checkAllday").checked = true;
+                    toggleAllday();
+                }
+                document.getElementById('location').value = eventArray.location;
+                document.getElementById('status').value = eventArray.status;
+                document.getElementById('webpage').value = eventArray.webpage;
+                if (eventArray.imageurl) {
+                    document.getElementById("imagePreview").style.backgroundImage = "url(" + eventArray.imageurl + ")";
 
-    document.getElementById('title').value = eventArray.title;
-    document.getElementById('organizer').value = eventArray.organizer;
-    document.getElementById('startDate').value = eventArray.end.split("T")[0];
-    document.getElementById('startTime').value = eventArray.end.split("T")[1];
-    document.getElementById('endDate').value = eventArray.end.split("T")[0];
-    document.getElementById('endTime').value = eventArray.end.split("T")[1];
-    if (eventArray.allday) {
-        document.getElementById("checkAllday").checked = true;
-        toggleAllday();
-    }
-    document.getElementById('location').value = eventArray.location;
-    categories("Test");
-    document.getElementById('status').value = eventArray.status;
-    document.getElementById('webpage').value = eventArray.webpage;
-    if (eventArray.imageurl) {
-        document.getElementById("imagePreview").style.backgroundImage = "url(" + eventArray.imageurl + ")";
-
-    }
-    toggleView("createEntry");
-
+                }
+                toggleView("createEntry");
+            } else {
+                console.error(xhr.statusText);
+            }
+        }
+    };
 
 }
 
@@ -122,75 +109,81 @@ function retrieveEvents(call) {
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
-    xhr.open("GET", url, false);
-    xhr.send();
+    xhr.open("GET", url, true);
+    xhr.onload = function (e) {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                eventlistArray = JSON.parse(xhr.responseText);
+                events = JSON.parse(JSON.stringify(eventlistArray));
+                for (event in events) {
+                    events[event].allDay = events[event].allday;
+                    delete events[event].allday;
+                }
+                console.log(events);
+                $('#calendar').fullCalendar('removeEvents');
+                $('#calendar').fullCalendar('addEventSource', events);
 
-    eventlistArray = JSON.parse(xhr.responseText);
 
-    events = JSON.parse(JSON.stringify(eventlistArray));
-    for(event in events){
-        events[event].allDay = events[event].allday;
-        delete events[event].allday;
-    }
-    if(call !== "init") {
-        $('#calendar').fullCalendar('removeEvents');
-        $('#calendar').fullCalendar('addEventSource', events);
-    }
+                selectedRowId = eventlistArray[eventlistArray.length - 1].id;
+                sortArray("date ASC");
 
-    selectedRowId = eventlistArray[eventlistArray.length - 1].id;
-    sortArray("date ASC");
+                var txt = "<table class='calenderList'>" +
+                    "<tr>" +
+                    "<th>Event name" +
+                    "</th>" +
+                    "<th>Start date" +
+                    "</th>" +
+                    "<th>Start time" +
+                    "</th>" +
+                    "<th>End time" +
+                    "</th>" +
+                    "<th>End date" +
+                    "</th>" +
+                    "</tr>"
 
-    var txt = "<table class='calenderList'>" +
-        "<tr>" +
-        "<th>Event name" +
-        "</th>" +
-        "<th>Start date" +
-        "</th>" +
-        "<th>Start time" +
-        "</th>" +
-        "<th>End time" +
-        "</th>" +
-        "<th>End date" +
-        "</th>" +
-        "</tr>"
+                for (event in eventlistArray) {
+                    tableRow = "tableRow" + event
+                    txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + event + ")'>" +
+                        "<td>" +
+                        eventlistArray[event].title +
+                        "</td>"
+                    if (eventlistArray[event].allday) {
+                        txt += "<td>" +
+                            eventlistArray[event].start.substr(0, 10) +
+                            "</td>" +
+                            "<td>" +
+                            "Allday" +
+                            "</td>" +
+                            "<td>" +
+                            "</td>" +
+                            "<td>" +
+                            "</td>"
+                    } else {
+                        txt += "<td>" +
+                            eventlistArray[event].start.substr(0, 10) +
+                            "</td>" +
+                            "<td>" +
+                            eventlistArray[event].start.substr(11, 5) +
+                            "</td>" +
+                            "<td>" +
+                            eventlistArray[event].end.substr(11, 5) +
+                            "</td>" +
+                            "<td>" +
+                            eventlistArray[event].end.substr(0, 10) +
+                            "</td>"
+                    }
 
-    for (event in eventlistArray) {
-        tableRow = "tableRow" + event
-        txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + event + ")'>" +
-            "<td>" +
-            eventlistArray[event].title +
-            "</td>"
-        if (eventlistArray[event].allday) {
-            txt += "<td>" +
-                eventlistArray[event].start.substr(0, 10) +
-                "</td>" +
-                "<td>" +
-                "Allday" +
-                "</td>" +
-                "<td>" +
-                "</td>" +
-                "<td>" +
-                "</td>"
-        } else {
-            txt += "<td>" +
-                eventlistArray[event].start.substr(0, 10) +
-                "</td>" +
-                "<td>" +
-                eventlistArray[event].start.substr(11, 5) +
-                "</td>" +
-                "<td>" +
-                eventlistArray[event].end.substr(11, 5) +
-                "</td>" +
-                "<td>" +
-                eventlistArray[event].end.substr(0, 10) +
-                "</td>"
+                    txt += "</tr>"
+
+                }
+                txt += "</table>";
+                document.getElementById("listEntry").innerHTML = txt;
+            } else {
+                console.error(xhr.statusText);
+            }
         }
-
-        txt += "</tr>"
-
-    }
-    txt += "</table>";
-    document.getElementById("listEntry").innerHTML = txt;
+    };
+    xhr.send();
 }
 
 //retrieves a single Event and displays entrys in a table
@@ -198,66 +191,72 @@ function retrieveEvent() {
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
-    xhr.open("GET", url, false);
+    xhr.open("GET", url, true);
     xhr.send();
+    xhr.onload = function (e) {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                eventArray = JSON.parse(xhr.responseText);
 
-    eventArray = JSON.parse(xhr.responseText);
+                var txt = "<table id='eventTable'>" +
+                    "<tr>" + "<td>" +
+                    "<img src='img/clockIcon.png' width='20' height='20'>" +
+                    "</td>" + "<td>" +
+                    eventArray.start.substr(0, 10)
+                if (eventArray.allday) {
+                    txt += " Allday"
+                } else {
+                    txt += " , " + eventArray.start.substr(11, 5) +
+                        " - " + eventArray.end.substr(0, 10) + " , " +
+                        eventArray.end.substr(11, 5)
+                }
+                txt += "</td>" + "</tr>" +
+                    "<tr>" + "<td>" +
+                    "<img src='img/locationIcon.png' width='20' height='20'>" +
+                    "</td>" + "<td>" +
+                    eventArray.location +
+                    "</td>" + "</tr>" +
+                    "<tr>" + "<td>" +
+                    "<img src='img/organizerIcon.png' width='20' height='20'>" +
+                    "</td>" + "<td>" +
+                    eventArray.organizer +
+                    "</td>" + "</tr>" +
+                    "<tr>" + "<td>" +
+                    "<img src='img/statusIcon.png' width='20' height='20'>" +
+                    "</td>" + "<td>" +
+                    eventArray.status +
+                    "</td>" + "</tr>" +
+                    "<tr>" + "<td>" +
+                    "<img src='img/linkIcon.png' width='20' height='20'>" +
+                    "</td>" + "<td>" +
+                    "<a href='http://" + eventArray.webpage + "'>" + eventArray.webpage + "</a>" +
+                    "</td>" + "</tr>" +
+                    "</table>"
+                document.getElementById("entryTitle").innerHTML = "<h3 class='modal-title'>" + eventArray.title + "</h3>";
+                document.getElementById("entryTable").innerHTML = txt;
+                if (eventArray.imageurl) {
+                    document.getElementById("detailsHeader").style.backgroundImage = 'url(' + eventArray.imageurl + ')';
+                } else {
+                    document.getElementById("detailsHeader").style.backgroundImage = "none";
+                }
 
-    var txt = "<table id='eventTable'>" +
-        "<tr>" + "<td>" +
-        "<img src='img/clockIcon.png' width='20' height='20'>" +
-        "</td>" + "<td>" +
-        eventArray.start.substr(0, 10)
-    if (eventArray.allday) {
-        txt += " Allday"
-    } else {
-        txt += " , " + eventArray.start.substr(11, 5) +
-            " - " + eventArray.end.substr(0, 10) + " , " +
-            eventArray.end.substr(11, 5)
-    }
-    txt += "</td>" + "</tr>" +
-        "<tr>" + "<td>" +
-        "<img src='img/locationIcon.png' width='20' height='20'>" +
-        "</td>" + "<td>" +
-        eventArray.location +
-        "</td>" + "</tr>" +
-        "<tr>" + "<td>" +
-        "<img src='img/organizerIcon.png' width='20' height='20'>" +
-        "</td>" + "<td>" +
-        eventArray.organizer +
-        "</td>" + "</tr>" +
-        "<tr>" + "<td>" +
-        "<img src='img/statusIcon.png' width='20' height='20'>" +
-        "</td>" + "<td>" +
-        eventArray.status +
-        "</td>" + "</tr>" +
-        "<tr>" + "<td>" +
-        "<img src='img/linkIcon.png' width='20' height='20'>" +
-        "</td>" + "<td>" +
-        "<a href='http://" + eventArray.webpage + "'>" + eventArray.webpage + "</a>" +
-        "</td>" + "</tr>" +
-        "</table>"
-    document.getElementById("entryTitle").innerHTML = "<h3 class='modal-title'>" + eventArray.title + "</h3>";
-    document.getElementById("entryTable").innerHTML = txt;
-    if (eventArray.imageurl) {
-        document.getElementById("detailsHeader").style.backgroundImage = 'url(' + eventArray.imageurl + ')';
-    } else {
-        document.getElementById("detailsHeader").style.backgroundImage = "none";
-    }
-
-    if (eventArray.categories.length !== 0) {
-        var categories = "";
-        for (i = 0; i < eventArray.categories.length - 1; i++) {
-            categories += eventArray.categories[i].name + ", ";
+                if (eventArray.categories.length !== 0) {
+                    var categories = "";
+                    for (i = 0; i < eventArray.categories.length - 1; i++) {
+                        categories += eventArray.categories[i].name + ", ";
+                    }
+                    categories += eventArray.categories[i].name;
+                    document.getElementById("displayCategoriesEntry").innerHTML = categories;
+                    document.getElementById("displayCategories").innerHTML = categories;
+                } else {
+                    document.getElementById("displayCategoriesEntry").innerHTML = "No Category yet";
+                    document.getElementById("displayCategories").innerHTML = "No Category yet";
+                }
+            } else {
+                console.error(xhr.statusText);
+            }
         }
-        categories += eventArray.categories[i].name;
-        document.getElementById("displayCategoriesEntry").innerHTML = categories;
-        document.getElementById("displayCategories").innerHTML = categories;
-    } else {
-        document.getElementById("displayCategoriesEntry").innerHTML = "No Category yet";
-        document.getElementById("displayCategories").innerHTML = "No Category yet";
-    }
-
+    };
 }
 
 function createEntry() {
@@ -282,16 +281,6 @@ function createEntry() {
         data.imagedata = image;
     }
 
-
-    /*"id": 1456,
-    "title": "Toller Termin",
-    "location": null,
-    "organizer": "test@dsad.com",
-    "start": "2017-12-11T11:11",
-    "end": "2017-12-11T11:15",
-    "status": "Busy",
-    "allday": false,
-    "webpage": "google.com"*/
     clearFields();
 
     xhr.onload = function () {
@@ -438,31 +427,38 @@ function retrieveCategories(initCall) {
 
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories";
-    xhr.open("GET", url, false);
+    xhr.open("GET", url, true);
     xhr.send();
+    xhr.onload = function (e) {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                categorylistArray = JSON.parse(xhr.responseText);
 
-    categorylistArray = JSON.parse(xhr.responseText);
+                txt = "<table>" +
+                    "<tr><th>Categories</th></tr>";
 
-    txt = "<table>" +
-        "<tr><th>Categories</th></tr>";
+                for (category in categorylistArray) {
+                    tableRow = "category" + categorylistArray[category].id;
+                    txt += "<tr id='" + tableRow + "' class='tableRows'>" +
+                        "<td onclick='javascript:targetCategory(" + category + ")'>" +
+                        categorylistArray[category].name +
+                        "</td><td>" +
+                        "<input id='deleteClass'" + categorylistArray[category].id + "class='iconButton' type='image' src='img/deleteIcon.png' width='20' height='20'" +
+                        "onclick='javascript:deleteCategory(" + category + ")' alt='Icon Delete'>" +
+                        "</td></tr>"
+                }
+                txt += "</table>";
+                document.getElementById("tableCategories").innerHTML = txt;
 
-    for (category in categorylistArray) {
-        tableRow = "category" + categorylistArray[category].id;
-        txt += "<tr id='" + tableRow + "' class='tableRows'>" +
-            "<td onclick='javascript:targetCategory(" + category + ")'>" +
-            categorylistArray[category].name +
-            "</td><td>" +
-            "<input id='deleteClass'" + categorylistArray[category].id + "class='iconButton' type='image' src='img/deleteIcon.png' width='20' height='20'" +
-            "onclick='javascript:deleteCategory(" + category + ")' alt='Icon Delete'>" +
-            "</td></tr>"
-    }
-    txt += "</table>";
-    document.getElementById("tableCategories").innerHTML = txt;
-
-    if (initCall != "initCall") {              //soll beim init Call nicht ausgeführt werden
-        $(".newCategory").modal();
-        markCategories();
-    }
+                if (initCall != "initCall") {              //soll beim init Call nicht ausgeführt werden
+                    $(".newCategory").modal();
+                    markCategories();
+                }
+            } else {
+                console.error(xhr.statusText);
+            }
+        }
+    };
 }
 
 function markCategories() {
@@ -696,7 +692,7 @@ function targetRow(row) {
 function toggleView(show) {
     if (show === "listView") {
         edit = true;
-    } else if(show === "monthView"){
+    } else if (show === "monthView") {
         //$(window).trigger("resize");
     }
     $(".entryDetails").modal("hide");
@@ -719,7 +715,6 @@ function changeButton() {
             document.getElementById("category" + categorylistArray[cat].id).style.backgroundColor = "#F0F8FF";
         }
     }
-    document.getElementById("submitBtn").innerHTML = "<button onclick='validateInput(\"create\");' class='btn btn-primary'>Confirm</button>";
     clearFields();
 }
 
@@ -792,7 +787,7 @@ function validateInput(action) {
 
 
     if (valid) {
-        if(edit){
+        if (edit) {
             updateEntry();
         } else {
             createEntry();
@@ -803,13 +798,13 @@ function validateInput(action) {
         return;
     }
 
-    if(action === "update"){
-        if(valid){
+    if (action === "update") {
+        if (valid) {
             updateEntry();
         }
     }
-    else{
-        if(valid){
+    else {
+        if (valid) {
             createEntry();
         }
     }
