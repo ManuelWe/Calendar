@@ -1,0 +1,149 @@
+.navbar {
+    margin-bottom: 0;
+    background-color: #87CEEB;
+    color: #000000;
+    padding: 1% 0;
+    font-size: 1.2em;
+    border: 0;
+    border-radius: 0px 0px 0px 70px;
+}
+
+.navbar-inverse .navbar-nav .active a, .navbar-inverse .navbar-nav .active a:focus,
+.navbar-inverse .navbar-nav .active a:hover {
+    color: #000000;
+    background-color: #4169E1;
+    border-radius: 10px;
+}
+
+.navbar-inverse .navbar-nav li a {
+    color: #000000;
+}
+
+#logo {
+    margin-left: -5%;
+    margin-top: -13%;
+}
+
+.dropbtn {
+    background-color: #4169E1;
+    color: #000000;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #87CEEB;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 10px;
+}
+
+tr:nth-child(even) {
+    background-color: #87CEEB;
+}
+
+tr:nth-child(odd) {
+    background-color: #F0F8FF;
+}
+.tableRows:hover {
+    background-color: #4169E1;
+}
+#eventTable tr:nth-child(even) {
+    background-color: #87CEEB;
+}
+#eventTable tr:nth-child(odd) {
+    background-color: #F0F8FF;
+}
+#eventTable tr.selected {
+    background-color: #4169E1;
+}
+
+.listView {
+    background-color: #F0F8FF;
+}
+
+.list {
+    background-color: #F0F8FF;
+}
+
+.createEntry {
+    position: relative;
+    height: 100%;
+    width: 90%;
+    z-index: 1;
+    background-color: #F0F8FF;
+}
+
+.form-row {
+    padding: 1%;
+    background-color: #F0F8FF;
+}
+
+.form-group {
+    background-color: #F0F8FF;
+}
+
+.monthView {
+    background-color: #F0F8FF;
+}
+
+#imageForm {
+    width: 600px;
+    background: #ccc;
+    margin: 0%;
+    padding: 1%;
+    border: 1px solid black;
+}
+
+body {
+    background-color: #F0F8FF;
+}
+
+label {
+    font-size: large;
+    cursor: default;
+}
+.modal-dialog{
+    width: 599px;
+}
+.modal-sm {
+    width: 299px;
+}
+.modal-header {
+    background-color: #87CEEB;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    padding: 5px;
+    border-bottom: 0px solid #F0F8FF;
+}
+#detailsHeader {
+    height: 2%;
+}
+.editCategoryIcon {
+    position: relative;
+    margin-top: 50px;
+}
+
+.modal-body {
+    min-height: 200pt;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-color: #F0F8FF;
+    position: relative;
+    padding: 15px;
+}
