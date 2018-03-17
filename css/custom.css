@@ -29,12 +29,16 @@
     color: #000000;
     border: none;
     cursor: pointer;
-    margin-top: 25%;
     font-size: 16px;
 }
 
 .dropdown:hover .dropbtn {
     background-color: #87CEEB;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
 }
 
 table {
@@ -54,12 +58,16 @@ tr:nth-child(even) {
 tr:nth-child(odd) {
     background-color: #F0F8FF;
 }
-
-#eventTable tr:nth-child(even) {
-    background-color: #888888;
-}
-
 .tableRows:hover {
+    background-color: #4169E1;
+}
+#eventTable tr:nth-child(even) {
+    background-color: #87CEEB;
+}
+#eventTable tr:nth-child(odd) {
+    background-color: #F0F8FF;
+}
+#eventTable tr.selected {
     background-color: #4169E1;
 }
 
@@ -72,7 +80,7 @@ tr:nth-child(odd) {
 }
 
 .createEntry {
-    position: absolute;
+    position: relative;
     height: 100%;
     width: 90%;
     z-index: 1;
@@ -95,8 +103,8 @@ tr:nth-child(odd) {
 #imageForm {
     width: 600px;
     background: #ccc;
-    margin: 2% auto;
-    padding: 5%;
+    margin: 0%;
+    padding: 1%;
     border: 1px solid black;
 }
 
@@ -107,4 +115,35 @@ body {
 label {
     font-size: large;
     cursor: default;
+}
+.modal-dialog{
+    width: 599px;
+}
+.modal-sm {
+    width: 299px;
+}
+.modal-header {
+    background-color: #87CEEB;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    padding: 5px;
+    border-bottom: 0px solid #F0F8FF;
+}
+#detailsHeader {
+    height: 2%;
+}
+.editCategoryIcon {
+    position: relative;
+    margin-top: 50px;
+}
+
+.modal-body {
+    min-height: 200pt;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-color: #F0F8FF;
+    position: relative;
+    padding: 15px;
 }

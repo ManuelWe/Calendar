@@ -235,9 +235,9 @@ function retrieveEvent() {
                 document.getElementById("entryTitle").innerHTML = "<h3 class='modal-title'>" + eventArray.title + "</h3>";
                 document.getElementById("entryTable").innerHTML = txt;
                 if (eventArray.imageurl) {
-                    document.getElementById("detailsHeader").style.backgroundImage = 'url(' + eventArray.imageurl + ')';
+                    document.getElementById("entryPicture").style.backgroundImage = 'url(' + eventArray.imageurl + ')';
                 } else {
-                    document.getElementById("detailsHeader").style.backgroundImage = "none";
+                    document.getElementById("entryPicture").style.backgroundImage = "url(img/pictureBlue.png)";
                 }
 
                 if (eventArray.categories.length !== 0) {
@@ -275,7 +275,7 @@ function createEntry() {
     data.status = document.getElementById('status').value;
     data.allday = document.getElementById("checkAllday").checked;
     data.webpage = document.getElementById('webpage').value;
-    if (document.getElementById("imagePreview").style.backgroundImage === "url(img/logo.png)") {
+    if (document.getElementById("imagePreview").style.backgroundImage === "url(img/pictureGrey.png)") {
 
     } else {
         data.imagedata = image;
@@ -313,7 +313,7 @@ function updateEntry() {
     data.status = document.getElementById('status').value;
     data.allday = document.getElementById("checkAllday").checked;
     data.webpage = document.getElementById('webpage').value;
-    if (document.getElementById("imagePreview").style.backgroundImage == 'url("img/logo.png")') {
+    if (document.getElementById("imagePreview").style.backgroundImage == 'url("img/pictureGrey.png")') {
         deleteImageFromServer();
     } else {
         data.imagedata = image;
@@ -463,7 +463,7 @@ function retrieveCategories(initCall) {
 
 function markCategories() {
     for (category in eventArray.categories) {
-        document.getElementById("category" + eventArray.categories[category].id).style.backgroundColor = "#5E4485";
+        document.getElementById("category" + eventArray.categories[category].id).style.backgroundColor == "#4169E1";
     }
 
 }
@@ -472,7 +472,7 @@ function markCategories() {
 function targetCategory(category) {
 
     if (edit) {
-        if (document.getElementById("category" + categorylistArray[category].id).style.backgroundColor == "rgb(94, 68, 133)") {
+        if (document.getElementById("category" + categorylistArray[category].id).style.backgroundColor == "rgb(65, 105, 225)") {
             removeCategory(category);
             if (category % 2 == 0) {
                 document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#87CEEB";
@@ -481,7 +481,7 @@ function targetCategory(category) {
             }
         } else {
             addCategory(category);
-            document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#5E4485";
+            document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#4169E1";
         }
     } else {
         if ($.inArray(category, categoryArray) != -1) {
@@ -493,7 +493,7 @@ function targetCategory(category) {
             }
         } else {
             categoryArray[categoryArray.length] = category;
-            document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#5E4485";
+            document.getElementById("category" + categorylistArray[category].id).style.backgroundColor = "#4169E1";
         }
 
         if (categoryArray.length !== 0) {
@@ -548,11 +548,16 @@ function createCategory() {
         }
     );
 
-    xhr.onload = function () {
+    xhr.onload = function (e) {
         retrieveCategories();
-    };
+    }
+    if(!validateCategory(categoryName)){
+        alert("Your input is not valid!")
+        clearFields();
+        return;
+    }
     xhr.send(data);
-
+    clearFields();
 }
 
 //adds a Category to a Event
@@ -615,13 +620,13 @@ function updateImageDisplay() {
                 para.textContent = 'File name ' + curFiles[i].name + ': Not a valid file type. Update your selection.';
                 listItem.appendChild(para);
                 list.appendChild(listItem);
-                document.getElementById("imagePreview").style.backgroundImage = "url(img/logo.png)";
+                document.getElementById("imagePreview").style.backgroundImage = "url(img/pictureGrey.png)";
                 window.alert("Please select an JPEG or PNG File format!");
             } else {
                 para.textContent = 'File name ' + curFiles[i].name + ': Image too large. Update your selection.';
                 listItem.appendChild(para);
                 list.appendChild(listItem);
-                document.getElementById("imagePreview").style.backgroundImage = "url(img/logo.png)";
+                document.getElementById("imagePreview").style.backgroundImage = "url(img/pictureGrey.png)";
                 window.alert("Please select a picture smaller than 500kB!");
             }
 
@@ -655,7 +660,6 @@ function returnFileSize(number) {
     }
 }
 
-
 function addImage() {
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/images/" + selectedRowId;
@@ -667,7 +671,7 @@ function addImage() {
 
 function deleteImage() {
     image = null;
-    document.getElementById("imagePreview").style.backgroundImage = "url(img/logo.png)";
+    document.getElementById("imagePreview").style.backgroundImage = "url(img/pictureGrey.png)";
 }
 
 function deleteImageFromServer() {
@@ -775,13 +779,13 @@ function validateInput(action) {
     if (!document.getElementById("endDate").value) {
         valid = false;
     }
-    if (!location || location.length > 50) {
+    if (location.length > 50) {
         valid = false;
     }
     if (!document.getElementById("status").value) {
         valid = false;
     }
-    if (!webpage || webpage.length > 100) {
+    if (webpage.length > 100) {
         valid = false;
     }
 
@@ -811,6 +815,30 @@ function validateInput(action) {
 
 }
 
+function validateCategory(categoryName){
+    var xhr = new XMLHttpRequest();
+    var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories";
+    xhr.open("GET", url, true);
+    xhr.send();
+    xhr.onload = function (e) {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                categorylistArray = JSON.parse(xhr.responseText);
+            }
+        }
+    };
+    if(!categoryName){
+        return false;
+    }
+    for(cat in categorylistArray){
+        if(categorylistArray[cat].name.toLowerCase() === categoryName.toLowerCase()){
+            return false;
+        }
+    }
+    return true;
+
+}
+
 function clearFields() {
     document.getElementById("checkAllday").checked = false;
     document.getElementById("title").value = '';
@@ -824,6 +852,9 @@ function clearFields() {
     document.getElementById('webpage').value = '';
     categoryArray.length = 0;
     document.getElementById("displayCategories").innerHTML = "No Category yet";
+    document.getElementById("inputCategory").value = '';
+
+    deleteImage();
 }
 
 
