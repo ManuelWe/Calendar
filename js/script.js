@@ -42,10 +42,10 @@ function monthView() {
         },
         eventLimit: true, // allow "more" link when too many events
 
-        /*eventColor: 'blue',
-        eventBackgroundColor: 'blue',
-        eventBorderColor: 'blue',
-        eventTextColor: 'black',*/
+        eventColor: '#87CEEB',
+        eventBackgroundColor: '#87CEEB',
+        eventBorderColor: '#4169E1',
+        eventTextColor: 'black',
 
         eventClick: function (calEvent) {
             selectedRowId = calEvent.id;
@@ -53,11 +53,11 @@ function monthView() {
             retrieveEvent();
             $(this).css('border-color', 'red');
         },
-        eventMouseover: function (event) {
-            $(this).css('border-color', 'green');
+        eventMouseover: function () {
+            $(this).css('border-color', 'red');
         },
-        eventMouseout: function (event) {
-            $(this).css('border-color', 'white');
+        eventMouseout: function () {
+            $(this).css('border-color', '#4169E1');
         }
     });
 }
@@ -79,8 +79,8 @@ function editEvent() {
 
                 document.getElementById('title').value = eventArray.title;
                 document.getElementById('organizer').value = eventArray.organizer;
-                document.getElementById('startDate').value = eventArray.end.split("T")[0];
-                document.getElementById('startTime').value = eventArray.end.split("T")[1];
+                document.getElementById('startDate').value = eventArray.start.split("T")[0];
+                document.getElementById('startTime').value = eventArray.start.split("T")[1];
                 document.getElementById('endDate').value = eventArray.end.split("T")[0];
                 document.getElementById('endTime').value = eventArray.end.split("T")[1];
                 if (eventArray.allday) {
@@ -107,6 +107,7 @@ function editEvent() {
 //Retrieves every Event from the Server and displays them in a list
 function retrieveEvents(call) {
 
+    var date;
     var xhr = new XMLHttpRequest();
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events";
     xhr.open("GET", url, true);
@@ -118,8 +119,12 @@ function retrieveEvents(call) {
                 for (event in events) {
                     events[event].allDay = events[event].allday;
                     delete events[event].allday;
+                    if(events[event].allDay){
+                        date = new Date(events[event].end);
+                        date.setDate(date.getDate()+1);
+                        events[event].end = date.yyyymmdd();
+                    }
                 }
-                console.log(events);
                 $('#calendar').fullCalendar('removeEvents');
                 $('#calendar').fullCalendar('addEventSource', events);
 
@@ -142,42 +147,52 @@ function retrieveEvents(call) {
                     "</tr>"
 
                 for (event in eventlistArray) {
-                    tableRow = "tableRow" + event
+                    tableRow = "tableRow" + event;
                     txt += "<tr id='" + tableRow + "' class='tableRows' onclick='javascript:targetRow(" + event + ")'>" +
                         "<td>" +
                         eventlistArray[event].title +
                         "</td>"
                     if (eventlistArray[event].allday) {
                         txt += "<td>" +
-                            eventlistArray[event].start.substr(0, 10) +
+                            eventlistArray[event].start.split("T")[0] +
                             "</td>" +
                             "<td>" +
                             "Allday" +
                             "</td>" +
                             "<td>" +
+                            "Allday" +
                             "</td>" +
-                            "<td>" +
-                            "</td>"
+                            "<td>";
+                            if(eventlistArray[event].start.split("T")[0] !== eventlistArray[event].end.split("T")[0]) {
+                                txt += eventlistArray[event].end.split("T")[0];
+                            }
+                            txt += "</td>";
                     } else {
                         txt += "<td>" +
-                            eventlistArray[event].start.substr(0, 10) +
+                            eventlistArray[event].start.split("T")[0] +
                             "</td>" +
                             "<td>" +
-                            eventlistArray[event].start.substr(11, 5) +
+                            eventlistArray[event].start.split("T")[1] +
                             "</td>" +
                             "<td>" +
-                            eventlistArray[event].end.substr(11, 5) +
+                            eventlistArray[event].end.split("T")[1] +
                             "</td>" +
                             "<td>" +
-                            eventlistArray[event].end.substr(0, 10) +
-                            "</td>"
+                            eventlistArray[event].end.split("T")[0] +
+                            "</td>";
                     }
 
-                    txt += "</tr>"
+                    txt += "</tr>";
 
                 }
                 txt += "</table>";
                 document.getElementById("listEntry").innerHTML = txt;
+
+                if (categoryArray.length != 0) {
+                    for (i in categoryArray) {
+                        addCategory(categoryArray[i]);
+                    }
+                }
             } else {
                 console.error(xhr.statusText);
             }
@@ -193,7 +208,7 @@ function retrieveEvent() {
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/events/" + selectedRowId;
     xhr.open("GET", url, true);
     xhr.send();
-    xhr.onload = function (e) {
+    xhr.onload = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 eventArray = JSON.parse(xhr.responseText);
@@ -202,20 +217,26 @@ function retrieveEvent() {
                     "<tr>" + "<td>" +
                     "<img src='img/clockIcon.png' width='20' height='20'>" +
                     "</td>" + "<td>" +
-                    eventArray.start.substr(0, 10)
-                if (eventArray.allday) {
+                    eventArray.start.split("T")[0];
+                if (eventArray.allday && eventArray.end.split("T")[0] === eventArray.start.split("T")[0]) {
                     txt += " Allday"
-                } else {
-                    txt += " , " + eventArray.start.substr(11, 5) +
-                        " - " + eventArray.end.substr(0, 10) + " , " +
-                        eventArray.end.substr(11, 5)
+                } else if(eventArray.allday){
+                    txt += " - " + eventArray.end.split("T")[0] + " Allday";
+                }else {
+                    txt += ", " + eventArray.start.split("T")[1] +
+                        " - " + eventArray.end.split("T")[0] + ", " +
+                        eventArray.end.split("T")[1];
                 }
                 txt += "</td>" + "</tr>" +
                     "<tr>" + "<td>" +
                     "<img src='img/locationIcon.png' width='20' height='20'>" +
-                    "</td>" + "<td>" +
-                    eventArray.location +
-                    "</td>" + "</tr>" +
+                    "</td>" + "<td>";
+                    if(eventArray.location) {
+                        txt += eventArray.location;
+                    } else {
+                        txt += "No location specified";
+                    }
+                    txt += "</td>" + "</tr>" +
                     "<tr>" + "<td>" +
                     "<img src='img/organizerIcon.png' width='20' height='20'>" +
                     "</td>" + "<td>" +
@@ -228,10 +249,14 @@ function retrieveEvent() {
                     "</td>" + "</tr>" +
                     "<tr>" + "<td>" +
                     "<img src='img/linkIcon.png' width='20' height='20'>" +
-                    "</td>" + "<td>" +
-                    "<a href='http://" + eventArray.webpage + "'>" + eventArray.webpage + "</a>" +
-                    "</td>" + "</tr>" +
-                    "</table>"
+                    "</td>" + "<td>";
+                    if(eventArray.webpage) {
+                        txt += "<a href='http://" + eventArray.webpage + "'>" + eventArray.webpage + "</a>";
+                    } else {
+                        txt += "No webpage specified";
+                    }
+                    txt += "</td>" + "</tr>" +
+                    "</table>";
                 document.getElementById("entryTitle").innerHTML = "<h3 class='modal-title'>" + eventArray.title + "</h3>";
                 document.getElementById("entryTable").innerHTML = txt;
                 if (eventArray.imageurl) {
@@ -275,22 +300,14 @@ function createEntry() {
     data.status = document.getElementById('status').value;
     data.allday = document.getElementById("checkAllday").checked;
     data.webpage = document.getElementById('webpage').value;
-    if (document.getElementById("imagePreview").style.backgroundImage === "url(img/pictureGrey.png)") {
-
-    } else {
+    if (document.getElementById("imagePreview").style.backgroundImage !== "url(img/pictureGrey.png)") {
         data.imagedata = image;
     }
-
-    clearFields();
 
     xhr.onload = function () {
         retrieveEvents();
         toggleView("listView");
-        if (categoryArray.length != 0) {
-            for (i in categoryArray) {
-                addCategory(categoryArray[i]);
-            }
-        }
+        clearFields();
 
     };
     xhr.send(JSON.stringify(data));
@@ -313,8 +330,10 @@ function updateEntry() {
     data.status = document.getElementById('status').value;
     data.allday = document.getElementById("checkAllday").checked;
     data.webpage = document.getElementById('webpage').value;
-    if (document.getElementById("imagePreview").style.backgroundImage == 'url("img/pictureGrey.png")') {
-        deleteImageFromServer();
+    if (document.getElementById("imagePreview").style.backgroundImage === 'url("img/pictureGrey.png")') {
+        if(eventlistArray.find(x => x.id === selectedRowId).imageurl !== null) {
+            deleteImageFromServer();
+        }
     } else {
         data.imagedata = image;
     }
@@ -322,10 +341,9 @@ function updateEntry() {
     xhr.onload = function () {
         retrieveEvents();
         toggleView("listView");
+        clearFields();
     };
     xhr.send(JSON.stringify(data));
-
-    clearFields();
 
 }
 
@@ -386,27 +404,31 @@ function updateList(count) {
             "</td>"
         if (eventlistArray[i].allday) {
             txt += "<td>" +
-                eventlistArray[i].start.substr(0, 10) +
+                eventlistArray[i].start.split("T")[0] +
                 "</td>" +
                 "<td>" +
                 "Allday" +
                 "</td>" +
                 "<td>" +
+                "Allday" +
                 "</td>" +
-                "<td>" +
-                "</td>"
+                "<td>";
+            if(eventlistArray[i].start.split("T")[0] !== eventlistArray[i].end.split("T")[0]) {
+                txt += eventlistArray[i].end.split("T")[0];
+            }
+            txt += "</td>";
         } else {
             txt += "<td>" +
-                eventlistArray[i].start.substr(0, 10) +
+                eventlistArray[i].start.split("T")[0] +
                 "</td>\n" +
                 "<td>" +
-                eventlistArray[i].start.substr(11, 5) +
+                eventlistArray[i].start.split("T")[1] +
                 "</td>" +
                 "<td>" +
-                eventlistArray[i].end.substr(11, 5) +
+                eventlistArray[i].end.split("T")[1] +
                 "</td>" +
                 "<td>" +
-                eventlistArray[i].end.substr(0, 10) +
+                eventlistArray[i].end.split("T")[0] +
                 "</td>" +
                 "</tr>"
         }
@@ -429,7 +451,7 @@ function retrieveCategories(initCall) {
     var url = "https://dhbw.ramonbisswanger.de/calendar/MeJa/categories";
     xhr.open("GET", url, true);
     xhr.send();
-    xhr.onload = function (e) {
+    xhr.onload = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 categorylistArray = JSON.parse(xhr.responseText);
@@ -463,7 +485,7 @@ function retrieveCategories(initCall) {
 
 function markCategories() {
     for (category in eventArray.categories) {
-        document.getElementById("category" + eventArray.categories[category].id).style.backgroundColor == "#4169E1";
+        document.getElementById("category" + eventArray.categories[category].id).style.backgroundColor = "#4169E1";
     }
 
 }
@@ -753,40 +775,58 @@ function sortArray(value) {
     updateList(-1);
 }
 
-function validateInput(action) {
+function validateInput() {
     var title = document.getElementById("title").value
     var organizer = document.getElementById("organizer").value
     var location = document.getElementById("location").value
     var webpage = document.getElementById("webpage").value
-    var valid = true;
+    var valid = false;
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
 
-    if (!title || title.length > 50) {
-        valid = false;
+    if(dd<10) {
+        dd = '0'+dd
     }
-    if (!organizer || !re.test(organizer)) {
-        valid = false;
+
+    if(mm<10) {
+        mm = '0'+mm
     }
-    if (!document.getElementById("startTime").value) {
-        valid = false;
-    }
-    if (!document.getElementById("endTime").value) {
-        valid = false;
-    }
-    if (!document.getElementById("startDate").value) {
-        valid = false;
-    }
-    if (!document.getElementById("endDate").value) {
-        valid = false;
-    }
-    if (location.length > 50) {
-        valid = false;
-    }
-    if (!document.getElementById("status").value) {
-        valid = false;
-    }
-    if (webpage.length > 100) {
-        valid = false;
+    today = yyyy + '-' + mm + '-' + dd;
+
+    if (!title) {
+        alert("You need a Title!");
+    } else if (title.length > 50){
+        alert("Your Title is too long! (Max. 50 characters)");
+    } else if (!organizer) {
+        alert("You need an Organizer!");
+    } else if(!re.test(organizer)) {
+        alert("The Organizer has to be an Email address!");
+    } else if (!document.getElementById("startDate").value) {
+        alert("Your Event has no start Date!");
+    } else if (!document.getElementById("endDate").value) {
+        alert("Your Event has no end Date!");
+    } else if (!document.getElementById("startTime").value) {
+        alert("You need a start Time!");
+    } else if (!document.getElementById("endTime").value) {
+        alert("Your Event has no end Time!");
+    } else if (document.getElementById("startDate").value.split("T")[0] < today ){
+        alert("No Entries in the past are allowed!");
+    } else if (document.getElementById("startDate").value > document.getElementById("endDate").value ) {
+        alert("Your Event ends before it starts!");
+    } else if (document.getElementById("startDate").value === document.getElementById("endDate").value &&
+        document.getElementById("startTime").value > document.getElementById("endTime").value ) {
+        alert("Your Event ends before it starts!");
+    } else if (location.length > 50) {
+        alert("Your Location name is too long! (max. 50 characters)");
+    } else if (!document.getElementById("status").value) {
+        alert("You need to select a status!");
+    } else if (webpage.length > 100) {
+        alert("Your webpage URL is too long! (max. 100 characters)");
+    } else {
+        valid = true;
     }
 
 
@@ -798,19 +838,7 @@ function validateInput(action) {
         }
         document.getElementById("listBtn").click();
     } else {
-        alert("Your input is not valid!")
         return;
-    }
-
-    if (action === "update") {
-        if (valid) {
-            updateEntry();
-        }
-    }
-    else {
-        if (valid) {
-            createEntry();
-        }
     }
 
 }
@@ -856,6 +884,16 @@ function clearFields() {
 
     deleteImage();
 }
+
+Date.prototype.yyyymmdd = function() {
+    var mm = this.getMonth() + 1; // getMonth() is zero-based
+    var dd = this.getDate();
+
+    return [this.getFullYear(),
+        (mm>9 ? '' : '0') + mm,
+        (dd>9 ? '' : '0') + dd
+    ].join('-');
+};
 
 
 
