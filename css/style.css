@@ -1,4 +1,4 @@
-fhtml {
+html {
     overflow-y: scroll;
 }
 
@@ -49,7 +49,7 @@ h3 {
     margin-top: -13%;
 }
 
-/*############## Table ######################################*/
+/*############## Tables ######################################*/
 table {
     border-collapse: collapse;
     width: 100%;
@@ -79,6 +79,7 @@ tr:nth-child(odd) {
 #eventTable tr.selected {
     background-color: #4169E1;
 }
+
 /*########################## Dropdown ##########################*/
 .dropbtn {
     background-color: #4169E1;
@@ -88,7 +89,6 @@ tr:nth-child(odd) {
     font-size: 16px;
     margin-top: 10px;
 }
-
 
 .dropdown:hover .dropbtn {
     background-color: #87CEEB;
@@ -123,7 +123,6 @@ tr:nth-child(odd) {
     display: block;
 }
 
-
 /*###################### List View ##################*/
 .calenderList {
     margin-top: 4%;
@@ -133,7 +132,7 @@ tr:nth-child(odd) {
 }
 
 #sortBtn {
-    margin-left: 100px;
+    margin-left: 20px;
 }
 
 .tableRows:hover {
@@ -184,6 +183,14 @@ tr:nth-child(odd) {
     margin: 10px;
 }
 
+#crossIconEntry {
+    margin-top: 8px;
+}
+
+#crossIconCategory {
+    margin-top: 8px;
+}
+
 .iconButton:hover {
     box-shadow: 0px 8px 16px 0px rgba(50, 100, 0, 0.2);
 }
@@ -195,9 +202,43 @@ tr:nth-child(odd) {
     background-size: cover;
 }
 
-/*################## Category Container ##############*/
-.displayCategories {
-    margin-top: 50px;
+.modal-dialog {
+    width: 599px;
+}
+
+.modal-sm {
+    width: 299px;
+}
+
+.modal-header {
+    max-height: 210px;
+    background-color: #87CEEB;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    padding: 5px;
+    border-bottom: 0px solid #F0F8FF;
+}
+
+.modal-body {
+    min-height: 200pt;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-color: #F0F8FF;
+    position: relative;
+    padding: 15px;
+}
+
+#editCatButton{
+    margin-top: -3px;
+    float: left;
+    position: absolute;
+}
+
+#displayCategoriesEntry {
+    margin-top: -2px;
+    margin-left: 50px;
     position: absolute;
 }
 
@@ -274,6 +315,20 @@ tr:nth-child(odd) {
     border: 1px solid black;
 }
 
+.form-row {
+    padding: 1%;
+    background-color: #F0F8FF;
+}
+
+.form-group {
+    background-color: #F0F8FF;
+}
+
+#checkAllday{
+    margin-right: -30px;
+    position: absolute;
+}
+
 /*############################### Picture Selection Field ###########*/
 form li, div > p {
     background: #eee;
@@ -311,39 +366,4 @@ form label:hover, form button:hover {
 form label:active, form button:active {
     background-color: #0D3F8F;
     color: white;
-}
-
-.form-row {
-    padding: 1%;
-    background-color: #F0F8FF;
-}
-
-.form-group {
-    background-color: #F0F8FF;
-}
-
-
-.modal-dialog{
-    width: 599px;
-}
-.modal-sm {
-    width: 299px;
-}
-.modal-header {
-    background-color: #87CEEB;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    padding: 5px;
-    border-bottom: 0px solid #F0F8FF;
-}
-
-.modal-body {
-    min-height: 200pt;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    background-color: #F0F8FF;
-    position: relative;
-    padding: 15px;
 }

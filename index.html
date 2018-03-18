@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
+
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <title>Calender</title>
+    <title>Calendar</title>
     <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/png" href="img/organizerIcon.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css">
@@ -32,7 +32,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand"><img id="logo" src="img/logo.png" height="130" width="200"></a>
+            <a class="navbar-brand"><img id="logo" src="img/logo.png" height="130" width="200" alt="Logo"></a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar right">
@@ -43,6 +43,7 @@
         </div>
     </div>
 </nav>
+
 <!--######################### list View #################-->
 <div class="listView">
     <div class="list">
@@ -67,16 +68,11 @@
         </div>
 
         <div id="listEntry">
-            <!--Dieser Text wird vollständig vom Javascript überschrieben-->
         </div>
-
-
     </div>
-
-
 </div>
 
-<!--######################### Entry Deatils Modal #################-->
+<!--######################### Entry Details Modal #################-->
 
 <div class="entryDetails modal fade" role="dialog">
     <div class="modal-dialog">
@@ -89,22 +85,17 @@
                 <input id="editIcon" class="iconButton" type="image" src="img/editIcon.png" width="20" height="20"
                        onclick="javascript:editEvent();" alt="Icon Edit">
                 <div id="entryTitle">
-                    Dieser Text wird vollständig vom Javascript überschrieben
                 </div>
 
             </div>
             <div id="entryPicture" class="modal-body">
             </div>
             <div class="modal-body">
-
+                <input id="editCatButton" class="editCategoryIcon iconButton" type="image" src="img/editIcon.png" width="20"
+                       height="20" onclick="javascript:retrieveCategories()" alt="Icon Edit">
                 <div id="displayCategoriesEntry" class="displayCategories">
-                    Dieser Text wird vollständig vom Javascript überschrieben
                 </div>
-                <input class="editCategoryIcon iconButton" type="image" src="img/editIcon.png" width="20"
-                       height="20"
-                       onclick="javascript:retrieveCategories()" alt="Icon Edit">
                 <div id="entryTable">
-                    Dieser Text wird vollständig vom Javascript überschrieben
                 </div>
             </div>
         </div>
@@ -125,7 +116,6 @@
                 <input type="text" id="inputCategory" name="Category" placeholder="New Category">
                 <button id="addCategory" onclick="javascript:createCategory()">New Category</button>
                 <div id="tableCategories">
-                    Dieser Text wird vollständig vom Javascript überschrieben
                 </div>
             </div>
         </div>
@@ -170,7 +160,7 @@
             <input type="text" class="form-control" id="title" placeholder="Meeting, Sport etc..." required>
         </div>
         <div class="form-group col-md-3">
-            <input type="text" class="form-control" id="organizer" placeholder="Your name" required>
+            <input type="text" class="form-control" id="organizer" placeholder="Email address" required>
         </div>
         <div class="form-group col-md-3">
             <input type="date" class="form-control" id="startDate" required>
@@ -203,12 +193,11 @@
             <div id="displayCategories" class="displayCategories">
             </div>
             <input id="editCategory" class="editCategoryIcon iconButton" type="image" src="img/editIcon.png" width="20"
-                   height="20"
-                   onclick="javascript:categoryWindow()" alt="Icon Edit">
+                   height="20" onclick="javascript:categoryWindow()" alt="Icon Edit">
         </div>
         <div class="form-group col-md-3">
             <select id="status" class="form-control" required>
-                <option>Busy</option>
+                <option value="">Busy</option>
                 <option>Free</option>
                 <option>Tentative</option>
             </select>
